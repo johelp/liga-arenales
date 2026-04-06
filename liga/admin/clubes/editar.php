@@ -57,6 +57,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $telefono        = trim($_POST['telefono']        ?? '');
     $sitio_web       = trim($_POST['sitio_web']       ?? '');
 
+    // ── Subida de archivo de escudo ────────────────────────────────────────
+    if (!empty($_FILES['escudo_file']['name'])) {
+        $ext     = strtolower(pathinfo($_FILES['escudo_file']['name'], PATHINFO_EXTENSION));
+        $allowed = ['jpg','jpeg','png','gif','webp','svg'];
+        if (!in_array($ext, $allowed)) {
+            $errores['escudo'] = 'Formato no permitido. Usá JPG, PNG, WEBP o SVG.';
+        } elseif ($_FILES['escudo_file']['size'] > 2 * 1024 * 1024) {
+            $errores['escudo'] = 'El archivo supera los 2 MB.';
+        } elseif ($_FILES['escudo_file']['error'] !== UPLOAD_ERR_OK) {
+            $errores['escudo'] = 'Error al subir el archivo.';
+        } else {
+            $upload_dir = dirname(__DIR__, 2) . '/uploads/escudos/';
+            if (!is_dir($upload_dir)) mkdir($upload_dir, 0755, true);
+            $filename = 'escudo_' . time() . '_' . bin2hex(random_bytes(4)) . '.' . $ext;
+            if (move_uploaded_file($_FILES['escudo_file']['tmp_name'], $upload_dir . $filename)) {
+                $base = (isset($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'];
+                $escudo_url = $base . '/liga/uploads/escudos/' . $filename;
+            } else {
+                $errores['escudo'] = 'No se pudo guardar el archivo. Verificá permisos de uploads/.';
+            }
+        }
+    }
+
     if (empty($nombre_corto)) {
         $errores['nombre_corto'] = 'El nombre corto es obligatorio.';
     }
@@ -161,7 +184,7 @@ function formatearFecha($fecha) {
                     </li>
                 </ul>
                 
-                <form method="post" class="needs-validation" novalidate>
+                <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
                     <div class="tab-content" id="myTabContent">
                         <!-- Pestaña de Información General -->
                         <div class="tab-pane fade show active" id="general" role="tabpanel" aria-labelledby="general-tab">
@@ -203,11 +226,39 @@ function formatearFecha($fecha) {
                                 </div>
 
                                 <div class="col-md-6 mb-3">
-                                    <label for="escudo_url" class="form-label">URL del Escudo (opcional):</label>
-                                    <input type="url" class="form-control" id="escudo_url" name="escudo_url" 
-                                        value="<?= htmlspecialchars($escudo_url); ?>" placeholder="https://ejemplo.com/escudo.png">
-                                    <div class="url-helper">
-                                        <i class="bi bi-info-circle me-1"></i> Ingresa la URL completa de la imagen del escudo.
+                                    <label class="form-label">Escudo <span class="text-muted fw-normal small">(opcional)</span></label>
+                                    <?php if (!empty($escudo_url)): ?>
+                                    <div class="mb-2 d-flex align-items-center gap-2">
+                                        <img src="<?= htmlspecialchars($escudo_url) ?>" id="escudo-actual"
+                                             style="width:48px;height:48px;object-fit:contain;border-radius:50%;background:#f0f4f8;border:1px solid #dde3ec;">
+                                        <small class="text-muted">Escudo actual</small>
+                                    </div>
+                                    <?php endif; ?>
+                                    <ul class="nav nav-tabs mb-2" style="font-size:.8rem;">
+                                        <li class="nav-item">
+                                            <button type="button" class="nav-link active py-1 px-2" onclick="switchTabEscudo('subir')">
+                                                <i class="bi bi-upload me-1"></i>Subir archivo
+                                            </button>
+                                        </li>
+                                        <li class="nav-item">
+                                            <button type="button" class="nav-link py-1 px-2" onclick="switchTabEscudo('url')">
+                                                <i class="bi bi-link-45deg me-1"></i>URL
+                                            </button>
+                                        </li>
+                                    </ul>
+                                    <div id="panel-subir-e">
+                                        <input type="file" name="escudo_file" id="escudo_file"
+                                               class="form-control form-control-sm <?= !empty($errores['escudo'])?'is-invalid':'' ?>"
+                                               accept="image/png,image/jpeg,image/gif,image/webp,image/svg+xml">
+                                        <?php if (!empty($errores['escudo'])): ?>
+                                        <div class="invalid-feedback d-block"><?= $errores['escudo'] ?></div>
+                                        <?php endif; ?>
+                                        <small class="text-muted">JPG, PNG, WEBP o SVG · Máx. 2 MB. Reemplaza el escudo actual.</small>
+                                    </div>
+                                    <div id="panel-url-e" style="display:none;">
+                                        <input type="url" class="form-control form-control-sm" id="escudo_url" name="escudo_url"
+                                            value="<?= htmlspecialchars($escudo_url); ?>" placeholder="https://ejemplo.com/escudo.png">
+                                        <small class="text-muted">Si subís un archivo, se ignora esta URL.</small>
                                     </div>
                                 </div>
 

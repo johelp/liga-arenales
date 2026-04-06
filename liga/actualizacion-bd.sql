@@ -3,6 +3,16 @@
 -- Ejecutar en phpMyAdmin sobre la base de datos existente
 -- ============================================================
 
+-- 0. Formato/tipo del torneo
+-- NOTA: Si el campo ya existe, podés omitir esta línea.
+ALTER TABLE `torneos`
+  ADD COLUMN `formato` ENUM('liga','playoff','grupos_playoff') NOT NULL DEFAULT 'liga'
+    COMMENT 'liga=tabla posiciones; playoff=eliminatorias; grupos_playoff=fase grupos + eliminatoria';
+
+-- 0b. Etapas del Play Off (para partidos de fase eliminatoria)
+-- El campo fase en partidos ya existe. Si no, agregarlo:
+-- ALTER TABLE `partidos` ADD COLUMN `fase` VARCHAR(50) NULL DEFAULT NULL;
+
 -- 1. Tabla de usuarios del panel de administración
 -- (acceso limitado por torneo para carga de resultados)
 CREATE TABLE IF NOT EXISTS `usuarios` (

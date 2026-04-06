@@ -55,6 +55,8 @@ if ($id_torneo > 0) {
     exit();
 }
 
+$formatos_validos = ['liga', 'playoff', 'grupos_playoff'];
+
 // Procesar el formulario de edición del torneo
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['guardar_torneo'])) {
     $nombre = trim($_POST['nombre'] ?? '');
@@ -62,6 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['guardar_torneo'])) {
     $fecha_fin = empty($_POST['fecha_fin']) ? null : $_POST['fecha_fin'];
     $activo = isset($_POST['activo']) ? 1 : 0;
     $descripcion = trim($_POST['descripcion'] ?? '');
+    $formato = in_array($_POST['formato'] ?? '', $formatos_validos) ? $_POST['formato'] : 'liga';
 
     if (empty($nombre)) {
         $errores['nombre'] = 'El nombre del torneo es obligatorio.';
@@ -75,7 +78,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['guardar_torneo'])) {
                     fecha_inicio = :fecha_inicio,
                     fecha_fin = :fecha_fin,
                     activo = :activo,
-                    descripcion = :descripcion
+                    descripcion = :descripcion,
+                    formato = :formato
                 WHERE id_torneo = :id
             ");
             $stmt_update->bindParam(':nombre', $nombre);
@@ -83,6 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['guardar_torneo'])) {
             $stmt_update->bindParam(':fecha_fin', $fecha_fin);
             $stmt_update->bindParam(':activo', $activo, PDO::PARAM_INT);
             $stmt_update->bindParam(':descripcion', $descripcion);
+            $stmt_update->bindParam(':formato', $formato);
             $stmt_update->bindParam(':id', $id_torneo, PDO::PARAM_INT);
 
             if ($stmt_update->execute()) {
@@ -351,6 +356,42 @@ $clubes_por_division = agruparClubesPorDivision($clubes_asignados);
                                 <textarea class="form-control" id="descripcion" name="descripcion" rows="4"><?= htmlspecialchars($torneo['descripcion'] ?? ''); ?></textarea>
                             </div>
 
+                            <!-- Formato del torneo -->
+                            <?php
+                            $fmt_actual = $torneo['formato'] ?? 'liga';
+                            $fmts = [
+                                'liga'           => ['Liga / Clasificación', 'bi-table',        'Tabla de posiciones. Todos contra todos.'],
+                                'playoff'        => ['Play Off',             'bi-diagram-3',     'Eliminatorias por etapas.'],
+                                'grupos_playoff' => ['Grupos + Play Off',    'bi-grid-3x3-gap', 'Fase de grupos + eliminatorias.'],
+                            ];
+                            ?>
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Formato del torneo</label>
+                                <div class="row g-2">
+                                    <?php foreach ($fmts as $val => [$lbl, $ico, $desc]): ?>
+                                    <div class="col-sm-4">
+                                        <label class="d-block p-2 border rounded-3 fmt-card <?= $fmt_actual === $val ? 'border-primary bg-primary bg-opacity-10' : 'bg-light' ?>"
+                                               style="cursor:pointer;" for="fmt_<?= $val ?>">
+                                            <input type="radio" name="formato" id="fmt_<?= $val ?>" value="<?= $val ?>"
+                                                   class="d-none fmt-radio" <?= $fmt_actual === $val ? 'checked' : '' ?>>
+                                            <div class="text-center">
+                                                <i class="bi <?= $ico ?> fs-4 <?= $fmt_actual === $val ? 'text-primary' : 'text-muted' ?>"></i>
+                                                <div class="fw-semibold" style="font-size:.78rem;"><?= $lbl ?></div>
+                                                <div class="text-muted" style="font-size:.68rem;"><?= $desc ?></div>
+                                            </div>
+                                        </label>
+                                    </div>
+                                    <?php endforeach; ?>
+                                </div>
+                                <div id="panel-etapas-edit" class="mt-2 p-2 bg-light border rounded-3" style="<?= $fmt_actual === 'liga' ? 'display:none;' : '' ?>">
+                                    <p class="small text-muted mb-1">
+                                        <i class="bi bi-info-circle me-1"></i>
+                                        Las etapas (Cuartos, Semifinal, Final, etc.) se asignan al cargar cada partido en el campo <strong>Fase / Etapa</strong>.
+                                        La tabla de posiciones excluye automáticamente esos partidos.
+                                    </p>
+                                </div>
+                            </div>
+
                             <div class="form-switch mb-4">
                                 <input class="form-check-input" type="checkbox" id="activo" name="activo" <?= ($torneo['activo'] ?? 1) ? 'checked' : ''; ?>>
                                 <label class="form-check-label ms-2" for="activo">
@@ -444,6 +485,25 @@ $clubes_por_division = agruparClubesPorDivision($clubes_asignados);
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Formato selector
+            document.querySelectorAll('.fmt-radio').forEach(radio => {
+                radio.closest('label').addEventListener('click', function() {
+                    document.querySelectorAll('.fmt-card').forEach(c => {
+                        c.classList.remove('border-primary','bg-primary','bg-opacity-10');
+                        c.classList.add('bg-light');
+                        c.querySelector('i').classList.remove('text-primary');
+                        c.querySelector('i').classList.add('text-muted');
+                    });
+                    this.classList.add('border-primary','bg-primary','bg-opacity-10');
+                    this.classList.remove('bg-light');
+                    this.querySelector('i').classList.add('text-primary');
+                    this.querySelector('i').classList.remove('text-muted');
+                    radio.checked = true;
+                    const panel = document.getElementById('panel-etapas-edit');
+                    if (panel) panel.style.display = radio.value === 'liga' ? 'none' : '';
+                });
+            });
+
             // Vista previa en tiempo real
             const nameInput = document.getElementById('nombre');
             const fechaInicioInput = document.getElementById('fecha_inicio');
