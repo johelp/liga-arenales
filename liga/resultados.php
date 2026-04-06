@@ -187,21 +187,21 @@ $anio_actual = date('Y');
         :root {
             --primary-color: #004386;
             --secondary-color: #E63946;
-            --accent-color: #FFD700;
-            --light-bg: #f8f9fa;
-            --dark-bg: #212529;
-            --text-color: #333;
-            --border-radius: 8px;
-            --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --accent-color: #f0a500;
+            --light-bg: #f0f4f8;
+            --dark-bg: #1a1d23;
+            --text-color: #212529;
+            --border-radius: 12px;
+            --box-shadow: 0 2px 10px rgba(0,0,0,.08);
         }
-        
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
             background-color: var(--light-bg);
             color: var(--text-color);
             margin: 0;
-            padding-bottom: 30px;
-            line-height: 1.6;
+            padding-bottom: 40px;
+            line-height: 1.5;
         }
         
         .header {
@@ -343,88 +343,91 @@ $anio_actual = date('Y');
         }
         
         .jornada-header {
-            background-color: #e9ecef;
-            padding: 10px 15px;
-            border-radius: var(--border-radius);
-            margin: 20px 0 15px;
-            font-weight: 600;
-            color: var(--primary-color);
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            background: linear-gradient(90deg, var(--primary-color) 0%, #0055a5 100%);
+            color: #fff;
+            padding: .55rem 1rem;
+            border-radius: 10px;
+            margin: 1.2rem 0 .75rem;
+            font-weight: 700;
+            font-size: .85rem;
+            letter-spacing: .04em;
+            text-transform: uppercase;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-        
+
         .partido-card {
-            border: 1px solid #eee;
+            background: #fff;
+            border: none;
             border-radius: var(--border-radius);
-            margin-bottom: 15px;
-            padding: 15px;
-            transition: all 0.2s ease;
+            margin-bottom: .75rem;
+            padding: 0;
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+            transition: box-shadow .2s;
         }
-        
-        .partido-card:hover {
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-        
+
+        .partido-card:hover { box-shadow: 0 4px 18px rgba(0,0,0,.13); }
+
         .partido-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 10px;
-            padding-bottom: 10px;
+            padding: .4rem .85rem;
+            background: #f8f9fa;
             border-bottom: 1px solid #eee;
         }
-        
-        .partido-fecha {
-            font-size: 0.9rem;
-            color: #6c757d;
-        }
-        
+
+        .partido-fecha { font-size: .78rem; color: #6c757d; }
+
         .partido-division {
-            font-size: 0.85rem;
-            background-color: var(--primary-color);
-            color: white;
-            padding: 3px 8px;
-            border-radius: 4px;
+            font-size: .72rem;
+            background: var(--primary-color);
+            color: #fff;
+            padding: .15rem .5rem;
+            border-radius: 20px;
+            font-weight: 600;
         }
-        
+
         .partido-info {
-            display: flex;
-            justify-content: space-between;
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
             align-items: center;
+            gap: .5rem;
+            padding: .75rem .85rem;
         }
-        
+
         .equipo {
             display: flex;
             flex-direction: column;
             align-items: center;
             text-align: center;
-            width: 40%;
+            gap: .3rem;
         }
-        
-        .equipo-local {
-            align-items: flex-end;
-        }
-        
-        .equipo-visitante {
-            align-items: flex-start;
-        }
-        
+
+        .equipo-local  { align-items: flex-end;   text-align: right; }
+        .equipo-visitante { align-items: flex-start; text-align: left; }
+
         .equipo-nombre {
-            font-weight: 600;
-            font-size: 1.1rem;
-            margin: 5px 0;
+            font-weight: 700;
+            font-size: .92rem;
+            line-height: 1.2;
         }
-        
+
         .marcador {
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            background-color: #f8f9fa;
-            padding: 10px 20px;
-            border-radius: var(--border-radius);
-            font-weight: 700;
-            font-size: 1.5rem;
-            width: 20%;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            background: #f8f9fa;
+            padding: .55rem .9rem;
+            border-radius: 10px;
+            font-weight: 800;
+            font-size: 1.35rem;
+            min-width: 72px;
+            letter-spacing: .05em;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,.06);
         }
         
         .partido-detalles {

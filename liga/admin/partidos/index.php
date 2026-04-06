@@ -32,7 +32,7 @@ if ($division_id) {
 }
 
 // Filtro de fecha
-$fecha = filter_input(INPUT_GET, 'fecha_filter', FILTER_SANITIZE_STRING);
+$fecha = filter_input(INPUT_GET, 'fecha_filter', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 if ($fecha) {
     $filters[] = "DATE(p.fecha_hora) = :fecha";
     $params[':fecha'] = $fecha;
@@ -46,7 +46,7 @@ if ($club_id) {
 }
 
 // Filtro de estado
-$estado = filter_input(INPUT_GET, 'estado_filter', FILTER_SANITIZE_STRING);
+$estado = filter_input(INPUT_GET, 'estado_filter', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 if ($estado !== null && $estado !== '') {
     if ($estado === '1') {
         $filters[] = "p.jugado = 1";
@@ -55,8 +55,8 @@ if ($estado !== null && $estado !== '') {
     }
 }
 
-// NUEVO: Filtro de fase (ahora es un string)
-$fase_nombre_filter = filter_input(INPUT_GET, 'fase_filter', FILTER_SANITIZE_STRING);
+// Filtro de fase
+$fase_nombre_filter = filter_input(INPUT_GET, 'fase_filter', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 if ($fase_nombre_filter) {
     $filters[] = "p.fase = :fase_nombre_filter";
     $params[':fase_nombre_filter'] = $fase_nombre_filter;

@@ -44,9 +44,9 @@ try {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id_division = filter_input(INPUT_POST, 'id_division', FILTER_VALIDATE_INT);
     $fecha_numero = filter_input(INPUT_POST, 'fecha_numero', FILTER_VALIDATE_INT);
-    $fecha_base = filter_input(INPUT_POST, 'fecha_base', FILTER_SANITIZE_STRING);
+    $fecha_base = filter_input(INPUT_POST, 'fecha_base', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     $id_torneo = filter_input(INPUT_POST, 'id_torneo', FILTER_VALIDATE_INT);
-    $fase_partido = filter_input(INPUT_POST, 'fase_partido', FILTER_SANITIZE_STRING); // **NUEVO: Obtener la fase**
+    $fase_partido = filter_input(INPUT_POST, 'fase_partido', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
     if (!$id_division) {
         $errores['general'] = 'Por favor, selecciona una división válida.';
@@ -71,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $partidos_cargados = 0;
             foreach ($_POST['local'] as $key => $id_club_local) {
                 $id_club_visitante = filter_var($_POST['visitante'][$key] ?? null, FILTER_VALIDATE_INT);
-                $hora = filter_var($_POST['hora'][$key] ?? null, FILTER_SANITIZE_STRING);
+                $hora = filter_var($_POST['hora'][$key] ?? null, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
                 if ($id_club_local &&
                     $id_club_visitante &&
