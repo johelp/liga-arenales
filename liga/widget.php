@@ -94,6 +94,7 @@ if ($tipo === 'tabla') {
 } elseif ($tipo === 'proximos') {
     if ($id_torneo) {
         $sql = "SELECT p.id_partido, p.fecha_hora, p.fase, p.fecha_numero, p.estadio,
+                       COALESCE(p.estado,'programado') AS estado, p.fecha_hora_original, p.motivo_reprogramacion,
                        cl.nombre_corto AS local, cl.escudo_url AS escudo_local,
                        cv.nombre_corto AS visitante, cv.escudo_url AS escudo_visitante,
                        d.nombre AS division
@@ -101,7 +102,7 @@ if ($tipo === 'tabla') {
                 JOIN clubes cl ON p.id_club_local=cl.id_club
                 JOIN clubes cv ON p.id_club_visitante=cv.id_club
                 JOIN divisiones d ON p.id_division=d.id_division
-                WHERE p.jugado=0 AND p.id_torneo=? AND p.fecha_hora >= NOW()";
+                WHERE p.jugado=0 AND p.id_torneo=? AND (p.fecha_hora >= NOW() OR COALESCE(p.estado,'programado') IN ('reprogramado','suspendido'))";
         $params = [$id_torneo];
         if ($id_division) { $sql .= " AND p.id_division=?"; $params[] = $id_division; }
         if ($fase_get)     { $sql .= " AND p.fase=?"; $params[] = $fase_get; }
@@ -116,6 +117,7 @@ if ($tipo === 'tabla') {
     // Fixture completo: todos los partidos (jugados y pendientes) agrupados por fecha/jornada
     if ($id_torneo) {
         $sql = "SELECT p.id_partido, p.fecha_hora, p.goles_local, p.goles_visitante, p.jugado, p.fase, p.fecha_numero, p.estadio,
+                       COALESCE(p.estado,'programado') AS estado, p.fecha_hora_original, p.motivo_reprogramacion,
                        cl.nombre_corto AS local, cl.escudo_url AS escudo_local,
                        cv.nombre_corto AS visitante, cv.escudo_url AS escudo_visitante,
                        d.nombre AS division
@@ -331,9 +333,13 @@ body {
 .w-footer a { color: <?= $text_muted ?>; }
 
 /* ── Live badge ── */
-.badge-live { background: #ff3b30; color: #fff; font-size: .65rem; padding: .15rem .4rem; border-radius: 4px; font-weight: 700; }
+.badge-live   { background: #ff3b30; color: #fff; font-size: .65rem; padding: .15rem .4rem; border-radius: 4px; font-weight: 700; }
 .badge-jugado { background: #198754; color: #fff; font-size: .65rem; padding: .15rem .4rem; border-radius: 4px; }
 .badge-pend   { background: #ffc107; color: #333; font-size: .65rem; padding: .15rem .4rem; border-radius: 4px; }
+.badge-reprog { background: #fd7e14; color: #fff; font-size: .65rem; padding: .15rem .4rem; border-radius: 4px; font-weight: 700; }
+.badge-susp   { background: #495057; color: #fff; font-size: .65rem; padding: .15rem .4rem; border-radius: 4px; }
+.partido-row.is-suspendido  { opacity: .6; }
+.partido-row.is-reprogramado .marcador { color: #fd7e14; }
 </style>
 </head>
 <body>
@@ -453,8 +459,11 @@ body {
 <?php if (empty($datos)): ?>
 <div class="empty"><i class="bi bi-calendar-check"></i>Sin próximos partidos.</div>
 <?php else: ?>
-<?php foreach ($datos as $p): ?>
-<div class="partido-row">
+<?php foreach ($datos as $p):
+    $ep = $p['estado'] ?? 'programado';
+    $rowcls = $ep === 'suspendido' ? 'is-suspendido' : ($ep === 'reprogramado' ? 'is-reprogramado' : '');
+?>
+<div class="partido-row <?= $rowcls ?>">
     <div class="equipo local">
         <span class="nombre"><?= htmlspecialchars($p['local']) ?></span>
         <?php if ($p['escudo_local']): ?>
@@ -462,13 +471,29 @@ body {
         <?php endif; ?>
     </div>
     <div class="marcador">
-        <div class="vs">VS</div>
-        <div class="hora"><?= date('d/m', strtotime($p['fecha_hora'])) ?></div>
-        <div class="hora"><?= date('H:i', strtotime($p['fecha_hora'])) ?></div>
-        <?php if ($p['estadio']): ?>
-        <div style="font-size:.6rem; color:<?= $text_muted ?>; margin-top:.1rem">
-            <i class="bi bi-geo-alt-fill"></i> <?= htmlspecialchars($p['estadio']) ?>
-        </div>
+        <?php if ($ep === 'suspendido'): ?>
+            <span class="badge-susp">SUSPENDIDO</span>
+            <?php if ($p['motivo_reprogramacion']): ?>
+            <div style="font-size:.6rem; color:<?= $text_muted ?>; margin-top:.2rem">
+                <?= htmlspecialchars($p['motivo_reprogramacion']) ?>
+            </div>
+            <?php endif; ?>
+        <?php else: ?>
+            <div class="vs">VS</div>
+            <div class="hora"><?= date('d/m', strtotime($p['fecha_hora'])) ?></div>
+            <div class="hora"><?= date('H:i', strtotime($p['fecha_hora'])) ?></div>
+            <?php if ($ep === 'reprogramado'): ?>
+            <span class="badge-reprog">REPROG.</span>
+            <?php if ($p['fecha_hora_original']): ?>
+            <div style="font-size:.6rem; color:<?= $text_muted ?>; margin-top:.15rem">
+                antes: <?= date('d/m H:i', strtotime($p['fecha_hora_original'])) ?>
+            </div>
+            <?php endif; ?>
+            <?php elseif ($p['estadio']): ?>
+            <div style="font-size:.6rem; color:<?= $text_muted ?>; margin-top:.1rem">
+                <i class="bi bi-geo-alt-fill"></i> <?= htmlspecialchars($p['estadio']) ?>
+            </div>
+            <?php endif; ?>
         <?php endif; ?>
     </div>
     <div class="equipo visitante">
@@ -492,8 +517,11 @@ body {
     <span><?= is_numeric($nro_fecha) ? 'Fecha ' . $nro_fecha : $nro_fecha ?></span>
     <span><?= date('d/m/Y', strtotime($partidos_fecha[0]['fecha_hora'])) ?></span>
 </div>
-<?php foreach ($partidos_fecha as $p): ?>
-<div class="partido-row">
+<?php foreach ($partidos_fecha as $p):
+    $ep = $p['estado'] ?? 'programado';
+    $rowcls = $ep === 'suspendido' ? 'is-suspendido' : ($ep === 'reprogramado' ? 'is-reprogramado' : '');
+?>
+<div class="partido-row <?= $rowcls ?>">
     <div class="equipo local">
         <span class="nombre"><?= htmlspecialchars($p['local']) ?></span>
         <?php if ($p['escudo_local']): ?>
@@ -501,11 +529,26 @@ body {
         <?php endif; ?>
     </div>
     <div class="marcador">
-        <?php if ($p['jugado']): ?>
+        <?php if ($ep === 'suspendido'): ?>
+            <span class="badge-susp">SUSP.</span>
+            <?php if ($p['motivo_reprogramacion']): ?>
+            <div style="font-size:.58rem; color:<?= $text_muted ?>; margin-top:.15rem; white-space:normal">
+                <?= htmlspecialchars($p['motivo_reprogramacion']) ?>
+            </div>
+            <?php endif; ?>
+        <?php elseif ($p['jugado']): ?>
             <div class="score"><?= $p['goles_local'] ?> – <?= $p['goles_visitante'] ?></div>
         <?php else: ?>
             <div class="vs">VS</div>
             <div class="hora"><?= date('H:i', strtotime($p['fecha_hora'])) ?></div>
+            <?php if ($ep === 'reprogramado'): ?>
+            <span class="badge-reprog">REPROG.</span>
+            <?php if ($p['fecha_hora_original']): ?>
+            <div style="font-size:.58rem; color:<?= $text_muted ?>; margin-top:.1rem">
+                antes: <?= date('d/m', strtotime($p['fecha_hora_original'])) ?>
+            </div>
+            <?php endif; ?>
+            <?php endif; ?>
         <?php endif; ?>
     </div>
     <div class="equipo visitante">

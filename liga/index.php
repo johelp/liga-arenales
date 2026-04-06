@@ -40,55 +40,72 @@ $mostrar_admin = isset($_SESSION['admin_autenticado']) && $_SESSION['admin_auten
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="description" content="Portal oficial de la Liga Deportiva de General Arenales - Resultados, tablas de posiciones y próximos partidos.">
     <title>Liga Deportiva de General Arenales</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <style>
     :root {
-        --blue:  #004386;
-        --blue2: #002f63;
-        --gold:  #f0a500;
-        --bg:    #f0f4f8;
+        --blue:       #004386;
+        --blue2:      #002f63;
+        --gold:       #f0a500;
+        --bg:         #f0f4f8;
+        --safe-b:     env(safe-area-inset-bottom, 0px);
+        --bottom-tab: 58px;
     }
-    * { box-sizing: border-box; }
-    body { background: var(--bg); font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; }
+    *, *::before, *::after { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+        background: var(--bg);
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+        margin: 0;
+        /* space for bottom tab bar on mobile */
+        padding-bottom: calc(var(--bottom-tab) + var(--safe-b));
+    }
 
     /* ── Header ── */
     .site-header {
         background: linear-gradient(135deg, var(--blue) 0%, var(--blue2) 100%);
         color: #fff;
-        padding: 1.4rem 1rem 1rem;
+        padding: .9rem 1rem .75rem;
+        padding-left: max(1rem, env(safe-area-inset-left));
+        padding-right: max(4rem, calc(env(safe-area-inset-right) + 4rem));
         position: relative;
     }
     .site-header .brand-title {
-        font-size: clamp(1.1rem, 4vw, 1.6rem);
+        font-size: clamp(.95rem, 3.5vw, 1.5rem);
         font-weight: 800;
         letter-spacing: -.01em;
         line-height: 1.2;
     }
-    .site-header .brand-sub { font-size: .82rem; opacity: .75; }
+    .site-header .brand-sub { font-size: .75rem; opacity: .75; }
     .site-header .header-badge {
         background: var(--gold);
         color: #1a1a1a;
-        font-size: .72rem;
+        font-size: .7rem;
         font-weight: 700;
-        padding: .18rem .55rem;
+        padding: .15rem .5rem;
         border-radius: 20px;
+        display: inline-block;
+        margin-top: .3rem;
     }
     .admin-link {
         position: absolute;
-        top: .8rem; right: 1rem;
+        top: .75rem; right: max(.75rem, env(safe-area-inset-right));
         color: rgba(255,255,255,.7);
-        font-size: .78rem;
+        font-size: .75rem;
         text-decoration: none;
         display: flex;
         align-items: center;
         gap: .3rem;
-        padding: .25rem .5rem;
+        padding: .3rem .5rem;
         border-radius: 6px;
         transition: background .2s;
+        -webkit-tap-highlight-color: transparent;
     }
     .admin-link:hover { background: rgba(255,255,255,.15); color: #fff; }
 
@@ -96,10 +113,9 @@ $mostrar_admin = isset($_SESSION['admin_autenticado']) && $_SESSION['admin_auten
     .filter-bar {
         background: #fff;
         border-bottom: 1px solid #e0e6ee;
-        padding: .6rem 1rem;
+        padding: .5rem .85rem;
         display: flex;
         gap: .5rem;
-        flex-wrap: wrap;
         align-items: center;
         position: sticky;
         top: 0;
@@ -107,19 +123,18 @@ $mostrar_admin = isset($_SESSION['admin_autenticado']) && $_SESSION['admin_auten
         box-shadow: 0 1px 6px rgba(0,0,0,.07);
     }
     .filter-bar select {
-        font-size: .84rem;
+        font-size: 16px; /* evita zoom en iOS */
         border-radius: 8px;
         border: 1px solid #d0d8e4;
         padding: .35rem .7rem;
         color: #333;
         background: #f7f9fc;
         flex: 1;
-        min-width: 120px;
-        max-width: 260px;
+        min-width: 0;
     }
     .filter-bar select:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px rgba(0,67,134,.12); }
 
-    /* ── Tab nav ── */
+    /* ── Top tab nav (desktop / tablet) ── */
     .tab-nav {
         background: #fff;
         border-bottom: 1px solid #e0e6ee;
@@ -142,15 +157,55 @@ $mostrar_admin = isset($_SESSION['admin_autenticado']) && $_SESSION['admin_auten
         align-items: center;
         gap: .35rem;
         transition: color .15s;
+        -webkit-tap-highlight-color: transparent;
     }
     .tab-nav a:hover { color: var(--blue); }
     .tab-nav a.active { color: var(--blue); border-bottom-color: var(--blue); }
 
+    /* ── Bottom tab bar (mobile) ── */
+    .bottom-tabs {
+        display: none;
+        position: fixed;
+        bottom: 0; left: 0; right: 0;
+        background: #fff;
+        border-top: 1px solid #e0e6ee;
+        z-index: 200;
+        justify-content: space-around;
+        align-items: stretch;
+        box-shadow: 0 -2px 10px rgba(0,0,0,.09);
+        padding-bottom: var(--safe-b);
+    }
+    .bottom-tabs a {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: .1rem;
+        color: #999;
+        text-decoration: none;
+        font-size: .6rem;
+        font-weight: 600;
+        padding: .45rem .2rem;
+        min-height: var(--bottom-tab);
+        -webkit-tap-highlight-color: transparent;
+        transition: color .1s;
+    }
+    .bottom-tabs a i { font-size: 1.3rem; line-height: 1; }
+    .bottom-tabs a.active { color: var(--blue); }
+    .bottom-tabs a.active i { color: var(--blue); }
+
+    @media (max-width: 600px) {
+        .tab-nav   { display: none; }       /* oculta el top nav en mobile */
+        .bottom-tabs { display: flex; }     /* muestra bottom nav en mobile */
+        body { padding-bottom: calc(var(--bottom-tab) + var(--safe-b)); }
+    }
+
     /* ── Widget container ── */
     .widget-wrap {
         max-width: 900px;
-        margin: 1.2rem auto;
-        padding: 0 .75rem;
+        margin: .85rem auto 0;
+        padding: 0 .6rem;
     }
     .widget-wrap iframe {
         width: 100%;
@@ -165,11 +220,12 @@ $mostrar_admin = isset($_SESSION['admin_autenticado']) && $_SESSION['admin_auten
     /* ── Footer ── */
     .site-footer {
         text-align: center;
-        padding: 2rem 1rem 3rem;
-        color: #888;
-        font-size: .8rem;
+        padding: 1.5rem 1rem 1rem;
+        color: #aaa;
+        font-size: .75rem;
     }
     .site-footer a { color: var(--blue); text-decoration: none; }
+    @media (max-width: 600px) { .site-footer { display: none; } }
     </style>
 </head>
 <body>
@@ -253,8 +309,26 @@ $mostrar_admin = isset($_SESSION['admin_autenticado']) && $_SESSION['admin_auten
 
 <footer class="site-footer">
     &copy; <?= date('Y') ?> Liga Deportiva de General Arenales &mdash;
-    Desarrollado por <a href="https://ascensiondigital.ar" target="_blank" rel="noopener">AscensionDigital.ar</a>
+    <a href="https://ascensiondigital.ar" target="_blank" rel="noopener">AscensionDigital.ar</a>
 </footer>
+
+<!-- Bottom tab bar (mobile only) -->
+<nav class="bottom-tabs" id="bottom-tabs">
+    <?php
+    $tabs_all = [
+        'tabla'      => ['Tabla',     'bi-table'],
+        'resultados' => ['Resultados','bi-check-circle-fill'],
+        'proximos'   => ['Próximos',  'bi-calendar-event-fill'],
+        'fixture'    => ['Fixture',   'bi-calendar3-range-fill'],
+    ];
+    foreach ($tabs_all as $k => [$label, $icon]):
+        $href = '?torneo_id=' . (int)$torneo_id . '&division_id=' . (int)$division_id . '&tab=' . $k;
+    ?>
+    <a href="<?= $href ?>" class="<?= $tab === $k ? 'active' : '' ?>">
+        <i class="bi <?= $icon ?>"></i><?= $label ?>
+    </a>
+    <?php endforeach; ?>
+</nav>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script>

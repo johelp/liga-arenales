@@ -33,6 +33,23 @@ CREATE TABLE IF NOT EXISTS `usuarios` (
 ALTER TABLE `partidos`
   ADD COLUMN `comentario` TEXT NULL DEFAULT NULL COMMENT 'Notas del partido: goles, amonestados, incidencias';
 
+-- 3. Estado "En juego" por partido
+-- NOTA: Si el campo ya existe, podés omitir esta línea.
+ALTER TABLE `partidos`
+  ADD COLUMN `en_juego` TINYINT(1) NOT NULL DEFAULT 0 COMMENT '1 = partido en curso actualmente';
+
+-- 4. Reprogramación y suspensiones
+-- NOTA: Si los campos ya existen, podés omitir estas líneas.
+ALTER TABLE `partidos`
+  ADD COLUMN `estado` ENUM('programado','reprogramado','suspendido') NOT NULL DEFAULT 'programado'
+    COMMENT 'Estado de programación del partido';
+ALTER TABLE `partidos`
+  ADD COLUMN `fecha_hora_original` DATETIME NULL DEFAULT NULL
+    COMMENT 'Fecha/hora original antes de reprogramar';
+ALTER TABLE `partidos`
+  ADD COLUMN `motivo_reprogramacion` VARCHAR(255) NULL DEFAULT NULL
+    COMMENT 'Razón de la reprogramación o suspensión';
+
 -- 3. Verificación: mostrar estructura resultante
 -- (opcional, para confirmar que todo quedó bien)
 -- DESCRIBE partidos;

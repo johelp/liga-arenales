@@ -1,0 +1,2 @@
+# Liga Deportiva - Apache config
+php_value output_buffering On

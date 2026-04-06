@@ -47,10 +47,16 @@ if ($club_id) {
 // Filtro de estado
 $estado = filter_input(INPUT_GET, 'estado_filter', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 if ($estado !== null && $estado !== '') {
-    if ($estado === '1') {
+    if ($estado === 'jugado') {
         $filters[] = "p.jugado = 1";
-    } elseif ($estado === '0') {
-        $filters[] = "p.jugado = 0";
+    } elseif ($estado === 'en_juego') {
+        $filters[] = "p.en_juego = 1 AND p.jugado = 0";
+    } elseif ($estado === 'pendiente') {
+        $filters[] = "p.jugado = 0 AND p.en_juego = 0 AND COALESCE(p.estado,'programado') = 'programado'";
+    } elseif ($estado === 'reprogramado') {
+        $filters[] = "COALESCE(p.estado,'programado') = 'reprogramado'";
+    } elseif ($estado === 'suspendido') {
+        $filters[] = "COALESCE(p.estado,'programado') = 'suspendido'";
     }
 }
 
@@ -91,6 +97,7 @@ try {
 
     // Obtener partidos con filtros aplicados
     $sql = "SELECT p.*,
+        COALESCE(p.estado, 'programado') AS estado,
         tl.nombre_corto AS local_nombre_corto,
         tl.escudo_url AS local_escudo_url,
         tv.nombre_corto AS visitante_nombre_corto,
@@ -118,17 +125,18 @@ function formatearFecha($fecha) {
     return date('d/m/Y H:i', strtotime($fecha));
 }
 
-// Función para obtener la cantidad de partidos por estado (ya existente)
+// Función para obtener la cantidad de partidos por estado
 function obtenerEstadisticasPartidos($pdo) {
     try {
-        $stmt = $pdo->query("SELECT 
-            COUNT(*) as total, 
+        $stmt = $pdo->query("SELECT
+            COUNT(*) as total,
             SUM(CASE WHEN jugado = 1 THEN 1 ELSE 0 END) as jugados,
-            SUM(CASE WHEN jugado = 0 THEN 1 ELSE 0 END) as pendientes
+            SUM(CASE WHEN en_juego = 1 AND jugado = 0 THEN 1 ELSE 0 END) as en_juego,
+            SUM(CASE WHEN jugado = 0 AND en_juego = 0 THEN 1 ELSE 0 END) as pendientes
             FROM partidos");
         return $stmt->fetch(PDO::FETCH_ASSOC);
     } catch (PDOException $e) {
-        return ['total' => 0, 'jugados' => 0, 'pendientes' => 0];
+        return ['total' => 0, 'jugados' => 0, 'en_juego' => 0, 'pendientes' => 0];
     }
 }
 
@@ -274,6 +282,15 @@ include '../header.php';
         .pagination .page-link {
             color: #004386;
         }
+        @keyframes pulse-dot {
+            0%,100% { transform:scale(1); opacity:1; }
+            50%      { transform:scale(1.6); opacity:.5; }
+        }
+        @keyframes pulse-badge {
+            0%,100% { box-shadow:0 0 0 0 rgba(220,53,69,.5); }
+            70%      { box-shadow:0 0 0 6px rgba(220,53,69,0); }
+        }
+        .estado-en-juego { animation: pulse-badge 1.4s infinite; }
         .pagination .page-item.active .page-link {
             background-color: #004386;
             border-color: #004386;
@@ -305,23 +322,34 @@ include '../header.php';
             ?>
         <?php endif; ?>
 
-        <div class="row estadisticas-card">
-            <div class="col-md-4">
+        <div class="row estadisticas-card g-2">
+            <div class="col-6 col-md-3">
                 <div class="stat-item">
                     <span class="stat-number"><?= $estadisticas['total'] ?? 0 ?></span>
-                    <span class="stat-label">Total de Partidos</span>
+                    <span class="stat-label">Total</span>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-6 col-md-3">
+                <a href="?estado_filter=en_juego" class="text-decoration-none">
+                <div class="stat-item border <?= ($estadisticas['en_juego'] ?? 0) > 0 ? 'border-danger' : 'border-transparent' ?>" style="position:relative;overflow:hidden;">
+                    <?php if (($estadisticas['en_juego'] ?? 0) > 0): ?>
+                    <span style="position:absolute;top:6px;right:8px;width:8px;height:8px;border-radius:50%;background:#dc3545;animation:pulse-dot 1.2s infinite;"></span>
+                    <?php endif; ?>
+                    <span class="stat-number" style="color:#dc3545;"><?= $estadisticas['en_juego'] ?? 0 ?></span>
+                    <span class="stat-label">En juego</span>
+                </div>
+                </a>
+            </div>
+            <div class="col-6 col-md-3">
                 <div class="stat-item">
-                    <span class="stat-number"><?= $estadisticas['jugados'] ?? 0 ?></span>
-                    <span class="stat-label">Partidos Jugados</span>
+                    <span class="stat-number text-success"><?= $estadisticas['jugados'] ?? 0 ?></span>
+                    <span class="stat-label">Jugados</span>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-6 col-md-3">
                 <div class="stat-item">
-                    <span class="stat-number"><?= $estadisticas['pendientes'] ?? 0 ?></span>
-                    <span class="stat-label">Partidos Pendientes</span>
+                    <span class="stat-number text-warning"><?= $estadisticas['pendientes'] ?? 0 ?></span>
+                    <span class="stat-label">Pendientes</span>
                 </div>
             </div>
         </div>
@@ -374,8 +402,11 @@ include '../header.php';
                         <label for="estado_filter" class="form-label">Estado:</label>
                         <select class="form-select" id="estado_filter" name="estado_filter">
                             <option value="">Todos</option>
-                            <option value="1" <?= ($estado === '1') ? 'selected' : ''; ?>>Jugados</option>
-                            <option value="0" <?= ($estado === '0') ? 'selected' : ''; ?>>Pendientes</option>
+                            <option value="en_juego"     <?= ($estado === 'en_juego')     ? 'selected' : ''; ?>>🔴 En juego</option>
+                            <option value="jugado"        <?= ($estado === 'jugado')       ? 'selected' : ''; ?>>Jugados</option>
+                            <option value="pendiente"     <?= ($estado === 'pendiente')    ? 'selected' : ''; ?>>Pendientes</option>
+                            <option value="reprogramado"  <?= ($estado === 'reprogramado') ? 'selected' : ''; ?>>🟠 Reprogramados</option>
+                            <option value="suspendido"    <?= ($estado === 'suspendido')   ? 'selected' : ''; ?>>⚫ Suspendidos</option>
                         </select>
                     </div>
                     <div class="col-md-4 col-lg-2">
@@ -471,13 +502,14 @@ include '../header.php';
         <?php else: ?>
             <div class="table-container">
                 <div class="table-responsive">
-                    <table class="table table-hover">
+                    <table class="table table-hover align-middle" id="tabla-partidos">
                     <thead>
     <tr>
-        <th>Fecha y Hora</th>
-        <th>Fecha Número</th> 
-        <th>Torneo / División</th>
-        <th>Fase</th> <th>Equipos</th>
+        <th class="col-hide-mobile">Fecha</th>
+        <th class="col-hide-mobile">Nº</th>
+        <th class="col-hide-mobile">Torneo / Div.</th>
+        <th class="col-hide-mobile">Fase</th>
+        <th>Equipos</th>
         <th class="text-center">Resultado</th>
         <th class="text-center">Estado</th>
         <th class="text-end">Acciones</th>
@@ -486,7 +518,7 @@ include '../header.php';
                         <tbody>
                             <?php foreach ($partidos as $partido): ?>
                                 <tr>
-                                    <td class="align-middle">
+                                    <td class="align-middle col-hide-mobile">
                                         <span class="date-badge">
                                             <i class="bi bi-calendar-event me-1"></i>
                                             <?= date('d/m/Y', strtotime($partido['fecha_hora'])); ?>
@@ -495,26 +527,26 @@ include '../header.php';
                                         <small class="text-muted">
                                             <i class="bi bi-clock me-1"></i>
                                             <?= date('H:i', strtotime($partido['fecha_hora'])); ?>
-                                            <?php if (!empty($partido['estadio'])): ?>
-                                                <span class="ms-2 text-nowrap">
-                                                    <i class="bi bi-geo-alt me-1"></i>
-                                                    <?= htmlspecialchars($partido['estadio']); ?>
-                                                </span>
-                                            <?php endif; ?>
                                         </small>
                                     </td>
-                                    <td class="align-middle text-center"> <?= htmlspecialchars($partido['fecha_numero']); ?>
+                                    <td class="align-middle text-center col-hide-mobile">
+                                        <?= htmlspecialchars($partido['fecha_numero']); ?>
                                     </td>
-                                    <td class="align-middle">
+                                    <td class="align-middle col-hide-mobile">
                                         <strong><?= htmlspecialchars($partido['torneo_nombre']); ?></strong>
                                         <br>
                                         <small class="text-muted"><?= htmlspecialchars($partido['division_nombre']); ?></small>
                                     </td>
-                                    <td class="align-middle">
-                                        <small class="text-muted"><?= htmlspecialchars($partido['fase'] ?? 'N/A'); ?></small>
+                                    <td class="align-middle col-hide-mobile">
+                                        <small class="text-muted"><?= htmlspecialchars($partido['fase'] ?? '—'); ?></small>
                                     </td>
 
                                     <td class="align-middle">
+                                        <!-- Compact date/fecha for mobile only -->
+                                        <div class="d-md-none mb-1" style="font-size:.68rem;color:#888;">
+                                            <i class="bi bi-calendar3 me-1"></i><?= date('d/m H:i', strtotime($partido['fecha_hora'])); ?>
+                                            <?php if ($partido['fecha_numero']): ?> · F<?= $partido['fecha_numero'] ?><?php endif; ?>
+                                        </div>
                                         <div class="d-flex align-items-center mb-1">
                                             <?php if (!empty($partido['local_escudo_url'])): ?>
                                                 <img src="<?= htmlspecialchars($partido['local_escudo_url']); ?>" alt="<?= htmlspecialchars($partido['local_nombre_corto']); ?>" class="club-badge rounded-circle">
@@ -545,29 +577,87 @@ include '../header.php';
                                             <span class="vs">VS</span>
                                         <?php endif; ?>
                                     </td>
+                                    <?php
+                                    $ahora        = time();
+                                    $hora_partido = strtotime($partido['fecha_hora']);
+                                    $est_prog     = $partido['estado'] ?? 'programado';
+                                    $por_iniciar  = !$partido['jugado'] && !$partido['en_juego']
+                                                    && $est_prog === 'programado'
+                                                    && $hora_partido <= $ahora
+                                                    && $hora_partido >= ($ahora - 3600 * 4);
+                                    ?>
                                     <td class="text-center align-middle">
-                                        <?php if ($partido['jugado']): ?>
-                                            <span class="badge-status bg-success">
+                                        <?php if ($est_prog === 'suspendido'): ?>
+                                            <span class="badge-status bg-dark text-white" title="<?= htmlspecialchars($partido['motivo_reprogramacion'] ?? '') ?>">
+                                                <i class="bi bi-slash-circle-fill me-1"></i> Suspendido
+                                            </span>
+                                        <?php elseif ($est_prog === 'reprogramado'): ?>
+                                            <span class="badge-status text-white" style="background:#fd7e14;"
+                                                  title="<?= $partido['fecha_hora_original'] ? 'Antes: '.date('d/m/Y H:i', strtotime($partido['fecha_hora_original'])) : '' ?>">
+                                                <i class="bi bi-arrow-repeat me-1"></i> Reprogramado
+                                            </span>
+                                        <?php elseif ($partido['jugado']): ?>
+                                            <span class="badge-status bg-success text-white">
                                                 <i class="bi bi-check-circle-fill me-1"></i> Jugado
                                             </span>
-                                        <?php else: ?>
-                                            <span class="badge-status bg-warning text-dark">
-                                                <i class="bi bi-clock-fill me-1"></i> Pendiente
+                                        <?php elseif ($partido['en_juego']): ?>
+                                            <span class="badge-status bg-danger text-white estado-en-juego">
+                                                <i class="bi bi-broadcast me-1"></i> En juego
                                             </span>
+                                        <?php elseif ($por_iniciar): ?>
+                                            <span class="badge-status bg-warning text-dark">
+                                                <i class="bi bi-alarm-fill me-1"></i> Por iniciar
+                                            </span>
+                                        <?php else: ?>
+                                            <span class="badge-status bg-secondary text-white">
+                                                <i class="bi bi-clock me-1"></i> Pendiente
+                                            </span>
+                                        <?php endif; ?>
+                                        <?php if ($partido['motivo_reprogramacion'] && in_array($est_prog, ['reprogramado','suspendido'])): ?>
+                                        <div style="font-size:.65rem; color:#888; margin-top:.15rem; white-space:normal; max-width:110px;">
+                                            <?= htmlspecialchars($partido['motivo_reprogramacion']) ?>
+                                        </div>
                                         <?php endif; ?>
                                     </td>
                                     <td class="text-end align-middle">
-                                        <div class="btn-group">
-                                            <a href="editar.php?id=<?= $partido['id_partido']; ?>" class="btn btn-sm btn-outline-primary action-btn" title="Editar">
+                                        <div class="d-flex gap-1 justify-content-end flex-wrap">
+
+                                        <?php if ($partido['en_juego'] && !$partido['jugado']): ?>
+                                            <!-- EN JUEGO: botón detener + cargar resultado -->
+                                            <button class="btn btn-sm btn-danger btn-estado action-btn"
+                                                    data-id="<?= $partido['id_partido'] ?>"
+                                                    data-accion="detener"
+                                                    title="Detener (vuelve a Pendiente)">
+                                                <i class="bi bi-stop-fill"></i>
+                                            </button>
+                                            <a href="cargar_resultados_fecha.php?fecha_numero=<?= urlencode($partido['fecha_numero']) ?>&torneo_id=<?= $partido['id_torneo'] ?>&division_id=<?= $partido['id_division'] ?>"
+                                               class="btn btn-sm btn-success action-btn" title="Cargar Resultado">
+                                                <i class="bi bi-clipboard-check"></i>
+                                            </a>
+                                        <?php elseif (!$partido['jugado']): ?>
+                                            <!-- PENDIENTE / POR INICIAR: botón iniciar -->
+                                            <button class="btn btn-sm <?= $por_iniciar ? 'btn-warning' : 'btn-outline-warning' ?> btn-estado action-btn"
+                                                    data-id="<?= $partido['id_partido'] ?>"
+                                                    data-accion="iniciar"
+                                                    title="Marcar como En juego">
+                                                <i class="bi bi-play-fill"></i>
+                                            </button>
+                                            <a href="cargar_resultados_fecha.php?fecha_numero=<?= urlencode($partido['fecha_numero']) ?>&torneo_id=<?= $partido['id_torneo'] ?>&division_id=<?= $partido['id_division'] ?>"
+                                               class="btn btn-sm btn-outline-success action-btn" title="Cargar Resultado directo">
+                                                <i class="bi bi-clipboard-check"></i>
+                                            </a>
+                                        <?php endif; ?>
+
+                                            <a href="editar.php?id=<?= $partido['id_partido']; ?>"
+                                               class="btn btn-sm btn-outline-primary action-btn" title="Editar">
                                                 <i class="bi bi-pencil"></i>
                                             </a>
-                                            <?php if (!$partido['jugado']): ?>
-                                                <a href="cargar_resultado.php?id=<?= $partido['id_partido']; ?>" class="btn btn-sm btn-outline-success action-btn" title="Cargar Resultado">
-                                                    <i class="bi bi-clipboard-check"></i>
-                                                </a>
-                                            <?php endif; ?>
-                                            <button type="button" class="btn btn-sm btn-outline-danger action-btn" 
-                                                    onclick="confirmarEliminar(<?= $partido['id_partido']; ?>, '<?= htmlspecialchars(addslashes($partido['local_nombre_corto'])); ?> vs <?= htmlspecialchars(addslashes($partido['visitante_nombre_corto'])); ?>')" 
+                                            <a href="reprogramar_fecha.php?modo=individual&id=<?= $partido['id_partido'] ?>"
+                                               class="btn btn-sm btn-outline-warning action-btn" title="Reprogramar / Suspender">
+                                                <i class="bi bi-calendar-x"></i>
+                                            </a>
+                                            <button type="button" class="btn btn-sm btn-outline-danger action-btn"
+                                                    onclick="confirmarEliminar(<?= $partido['id_partido']; ?>, '<?= htmlspecialchars(addslashes($partido['local_nombre_corto'])); ?> vs <?= htmlspecialchars(addslashes($partido['visitante_nombre_corto'])); ?>')"
                                                     title="Eliminar">
                                                 <i class="bi bi-trash"></i>
                                             </button>
@@ -610,31 +700,53 @@ include '../header.php';
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Función para confirmar eliminación de partido (existente)
+        // Confirmar eliminación
         function confirmarEliminar(id, nombre) {
             document.getElementById('partidoEliminar').textContent = nombre;
             document.getElementById('btnEliminar').href = 'eliminar.php?id=' + id;
-            
-            const modal = new bootstrap.Modal(document.getElementById('confirmarEliminarModal'));
-            modal.show();
+            new bootstrap.Modal(document.getElementById('confirmarEliminarModal')).show();
         }
-        
+
         document.addEventListener('DOMContentLoaded', function() {
             // Autoenvío del formulario al cambiar filtros
             const filtroForm = document.getElementById('filtroForm');
-            const selectFiltros = filtroForm.querySelectorAll('select');
-            const inputFecha = document.getElementById('fecha_filter');
-            
-            selectFiltros.forEach(select => {
-                select.addEventListener('change', function() {
-                    filtroForm.submit();
+            filtroForm.querySelectorAll('select').forEach(s => s.addEventListener('change', () => filtroForm.submit()));
+            document.getElementById('fecha_filter').addEventListener('change', () => filtroForm.submit());
+
+            // Botones de estado rápido (Iniciar / Detener)
+            document.querySelectorAll('.btn-estado').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const id     = this.dataset.id;
+                    const accion = this.dataset.accion;
+                    const fila   = this.closest('tr');
+                    const orig   = this.innerHTML;
+
+                    this.disabled = true;
+                    this.innerHTML = '<span class="spinner-border spinner-border-sm"></span>';
+
+                    const fd = new FormData();
+                    fd.append('id', id);
+                    fd.append('accion', accion);
+
+                    fetch('set_estado.php', { method: 'POST', body: fd })
+                        .then(r => r.json())
+                        .then(data => {
+                            if (data.ok) {
+                                // Recarga la página para reflejar el nuevo estado
+                                location.reload();
+                            } else {
+                                alert('Error: ' + (data.error || 'desconocido'));
+                                this.disabled = false;
+                                this.innerHTML = orig;
+                            }
+                        })
+                        .catch(() => {
+                            alert('Error de conexión.');
+                            this.disabled = false;
+                            this.innerHTML = orig;
+                        });
                 });
-            });
-            
-            inputFecha.addEventListener('change', function() {
-                filtroForm.submit();
             });
         });
     </script>
