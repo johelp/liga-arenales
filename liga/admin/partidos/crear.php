@@ -62,18 +62,18 @@ try {
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Validar y filtrar los datos del formulario
-    $fecha_hora = filter_input(INPUT_POST, 'fecha_hora', FILTER_SANITIZE_STRING);
+    $fecha_hora = trim($_POST['fecha_hora'] ?? '');
     $id_division = filter_input(INPUT_POST, 'id_division', FILTER_VALIDATE_INT);
     $id_club_local = filter_input(INPUT_POST, 'id_club_local', FILTER_VALIDATE_INT);
     $id_club_visitante = filter_input(INPUT_POST, 'id_club_visitante', FILTER_VALIDATE_INT);
     $id_torneo = filter_input(INPUT_POST, 'id_torneo', FILTER_VALIDATE_INT);
-    $arbitro = filter_input(INPUT_POST, 'arbitro', FILTER_SANITIZE_STRING) ?? '';
-    $estadio = filter_input(INPUT_POST, 'estadio', FILTER_SANITIZE_STRING) ?? '';
-    $observaciones = filter_input(INPUT_POST, 'observaciones', FILTER_SANITIZE_STRING) ?? '';
+    $arbitro = trim($_POST['arbitro'] ?? '');
+    $estadio = trim($_POST['estadio'] ?? '');
+    $observaciones = trim($_POST['observaciones'] ?? '');
     $jugado = isset($_POST['jugado']) ? 1 : 0;
     
     // Capturar la fase del partido
-    $fase = filter_input(INPUT_POST, 'fase', FILTER_SANITIZE_STRING) ?? '';
+    $fase = trim($_POST['fase'] ?? '');
     
     // Si la fase seleccionada es 'Primera Fase', entonces el número de fecha puede tener un valor.
     // De lo contrario, si es una fase de playoff, el número de fecha debe ser NULL.

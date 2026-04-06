@@ -49,13 +49,13 @@ if ($id_club > 0) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $nombre_corto = filter_input(INPUT_POST, 'nombre_corto', FILTER_SANITIZE_STRING);
-    $nombre_completo = filter_input(INPUT_POST, 'nombre_completo', FILTER_SANITIZE_STRING);
-    $escudo_url = filter_input(INPUT_POST, 'escudo_url', FILTER_SANITIZE_URL);
-    $fecha_fundacion = filter_input(INPUT_POST, 'fecha_fundacion') ?: null;
-    $direccion = filter_input(INPUT_POST, 'direccion', FILTER_SANITIZE_STRING);
-    $telefono = filter_input(INPUT_POST, 'telefono', FILTER_SANITIZE_STRING);
-    $sitio_web = filter_input(INPUT_POST, 'sitio_web', FILTER_SANITIZE_URL);
+    $nombre_corto    = trim($_POST['nombre_corto']    ?? '');
+    $nombre_completo = trim($_POST['nombre_completo'] ?? '');
+    $escudo_url      = trim($_POST['escudo_url']      ?? '');
+    $fecha_fundacion = trim($_POST['fecha_fundacion'] ?? '') ?: null;
+    $direccion       = trim($_POST['direccion']       ?? '');
+    $telefono        = trim($_POST['telefono']        ?? '');
+    $sitio_web       = trim($_POST['sitio_web']       ?? '');
 
     if (empty($nombre_corto)) {
         $errores['nombre_corto'] = 'El nombre corto es obligatorio.';

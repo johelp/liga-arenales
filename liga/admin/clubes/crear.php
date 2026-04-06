@@ -16,9 +16,9 @@ $nombre_completo = '';
 $escudo_url = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $nombre_corto = filter_input(INPUT_POST, 'nombre_corto', FILTER_SANITIZE_STRING);
-    $nombre_completo = filter_input(INPUT_POST, 'nombre_completo', FILTER_SANITIZE_STRING);
-    $escudo_url = filter_input(INPUT_POST, 'escudo_url', FILTER_SANITIZE_URL);
+    $nombre_corto    = trim($_POST['nombre_corto']    ?? '');
+    $nombre_completo = trim($_POST['nombre_completo'] ?? '');
+    $escudo_url      = trim($_POST['escudo_url']      ?? '');
 
     if (empty($nombre_corto)) {
         $errores['nombre_corto'] = 'El nombre corto es obligatorio.';

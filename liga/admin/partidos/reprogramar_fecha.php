@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 require_once '../../config.php';
 session_start();
 
@@ -23,7 +23,7 @@ try {
 $torneo_seleccionado = filter_input(INPUT_GET, 'torneo_id', FILTER_VALIDATE_INT);
 $division_seleccionada = filter_input(INPUT_GET, 'division_id', FILTER_VALIDATE_INT);
 $fecha_numero_seleccionada = filter_input(INPUT_GET, 'fecha_numero', FILTER_VALIDATE_INT);
-$nueva_fecha_hora = filter_input(INPUT_POST, 'nueva_fecha_hora', FILTER_SANITIZE_STRING);
+$nueva_fecha_hora = trim($_POST['nueva_fecha_hora'] ?? '');
 
 $divisiones = [];
 if ($torneo_seleccionado) {

@@ -57,11 +57,11 @@ if ($id_torneo > 0) {
 
 // Procesar el formulario de edición del torneo
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['guardar_torneo'])) {
-    $nombre = filter_input(INPUT_POST, 'nombre', FILTER_SANITIZE_STRING);
+    $nombre = trim($_POST['nombre'] ?? '');
     $fecha_inicio = empty($_POST['fecha_inicio']) ? null : $_POST['fecha_inicio'];
     $fecha_fin = empty($_POST['fecha_fin']) ? null : $_POST['fecha_fin'];
     $activo = isset($_POST['activo']) ? 1 : 0;
-    $descripcion = filter_input(INPUT_POST, 'descripcion', FILTER_SANITIZE_STRING);
+    $descripcion = trim($_POST['descripcion'] ?? '');
 
     if (empty($nombre)) {
         $errores['nombre'] = 'El nombre del torneo es obligatorio.';

@@ -39,7 +39,7 @@ if ($id_division > 0) {
     }
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $nombre = filter_input(INPUT_POST, 'nombre', FILTER_SANITIZE_STRING);
+        $nombre = trim($_POST['nombre'] ?? '');
         $orden = filter_input(INPUT_POST, 'orden', FILTER_VALIDATE_INT);
 
         if (empty($nombre)) {
