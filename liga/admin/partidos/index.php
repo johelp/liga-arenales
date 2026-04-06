@@ -1,7 +1,6 @@
 <?php
-ob_start(); // Garantizar que no haya problemas con los headers
+ob_start();session_start();
 require_once '../../config.php';
-session_start();
 
 // Verificar autenticación
 if (!isset($_SESSION['admin_autenticado']) || $_SESSION['admin_autenticado'] !== true) {
@@ -137,17 +136,10 @@ $estadisticas = obtenerEstadisticasPartidos($pdo);
 
 // Incluir header después de procesar los datos
 include '../header.php';
-?>
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestión de Partidos - Liga Deportiva</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <style>
+?>
+<style>
+
         body {
             background-color: #f8f9fa;
         }
@@ -286,10 +278,9 @@ include '../header.php';
             background-color: #004386;
             border-color: #004386;
         }
-    </style>
-</head>
-<body>
-    <div class="container my-4">
+    
+</style>
+<div class="container my-4">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h1><i class="bi bi-whistle"></i> Gestión de Partidos</h1>
             <div class="btn-group">
@@ -647,5 +638,5 @@ include '../header.php';
             });
         });
     </script>
-</body>
-</html>
+
+<?php include '../footer.php'; ?>

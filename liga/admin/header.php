@@ -1,5 +1,7 @@
 <?php
-$admin_nombre = isset($_SESSION['admin_nombre']) ? htmlspecialchars($_SESSION['admin_nombre']) : 'Admin';
+$admin_nombre    = isset($_SESSION['admin_nombre'])  ? htmlspecialchars($_SESSION['admin_nombre'])  : 'Admin';
+$es_superadmin   = $_SESSION['es_superadmin'] ?? true;
+$torneos_perm    = $_SESSION['torneos_permitidos'] ?? [];
 $app_root     = '/liga/';
 $base_path    = $app_root . 'admin/';
 $current_file = basename($_SERVER['PHP_SELF']);
@@ -161,6 +163,11 @@ function nav_active(string $dir, string $file = ''): string {
     <span class="spacer"></span>
     <span class="user-badge d-none d-md-flex">
         <i class="bi bi-person-circle"></i> <?= $admin_nombre ?>
+        <?php if ($es_superadmin): ?>
+            <span style="background:rgba(240,165,0,.25);color:#f0a500;font-size:.65rem;padding:.1rem .4rem;border-radius:10px;font-weight:700;letter-spacing:.5px;">ADMIN</span>
+        <?php else: ?>
+            <span style="background:rgba(255,255,255,.15);color:rgba(255,255,255,.7);font-size:.65rem;padding:.1rem .4rem;border-radius:10px;">editor</span>
+        <?php endif; ?>
     </span>
     <a href="<?= $base_path ?>logout.php" class="btn-logout ms-3" title="Cerrar sesión">
         <i class="bi bi-box-arrow-right"></i>
@@ -204,6 +211,24 @@ function nav_active(string $dir, string $file = ''): string {
             <a class="nav-link <?= nav_active('clubes') ?>"
                href="<?= $app_root ?>admin/clubes/">
                <i class="bi bi-shield-fill"></i> Clubes
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link <?= nav_active('', 'widgets.php') && $current_dir === 'admin' ? 'active' : '' ?>"
+               href="<?= $app_root ?>admin/widgets.php">
+               <i class="bi bi-window-stack"></i> Widgets
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link <?= nav_active('', 'compartir.php') && $current_dir === 'admin' ? 'active' : '' ?>"
+               href="<?= $app_root ?>admin/compartir.php">
+               <i class="bi bi-share-fill"></i> Compartir
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link <?= nav_active('usuarios') || ($current_file === 'usuarios.php' && $current_dir === 'admin') ? 'active' : '' ?>"
+               href="<?= $app_root ?>admin/usuarios.php">
+               <i class="bi bi-people-fill"></i> Usuarios
             </a>
         </li>
     </ul>

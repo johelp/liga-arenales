@@ -1,7 +1,6 @@
 <?php
-ob_start(); // Garantizar que no haya problemas con los headers
+ob_start();session_start();
 require_once '../../config.php';
-session_start();
 
 // Verificar autenticación
 if (!isset($_SESSION['admin_autenticado']) || $_SESSION['admin_autenticado'] !== true) {
@@ -45,102 +44,13 @@ function obtenerClubesParticipantesConEscudos(PDO $pdo, int $id_torneo): array
 include '../header.php';
 ?>
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestión de Torneos - Liga Deportiva</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <style>
-        body {
-            background-color: #f8f9fa;
-        }
-        .card {
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
-            border: none;
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-        }
-        .card-header {
-            background-color: #004386;
-            color: white;
-            border-radius: 10px 10px 0 0 !important;
-            font-weight: 600;
-            padding: 15px 20px;
-        }
-        .btn-primary {
-            background-color: #004386;
-            border-color: #004386;
-            border-radius: 8px;
-            padding: 10px 20px;
-            font-weight: 500;
-            transition: all 0.3s;
-        }
-        .btn-primary:hover {
-            background-color: #003366;
-            border-color: #003366;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-        .btn-outline-primary {
-            color: #004386;
-            border-color: #004386;
-        }
-        .btn-outline-primary:hover {
-            background-color: #004386;
-            color: white;
-        }
-        .btn-outline-danger:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-        .club-badge {
-            width: 30px;
-            height: 30px;
-            object-fit: cover;
-            border: 1px solid #dee2e6;
-            transition: transform 0.2s;
-        }
-        .club-badge:hover {
-            transform: scale(1.2);
-            z-index: 10;
-        }
-        .torneo-card {
-            border-left: 5px solid #004386;
-        }
-        .empty-state {
-            text-align: center;
-            padding: 40px;
-            color: #6c757d;
-        }
-        .empty-state i {
-            font-size: 4rem;
-            margin-bottom: 20px;
-            color: #dee2e6;
-        }
-        .club-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 5px;
-            margin-top: 10px;
-        }
-        .tooltip-inner {
-            max-width: 200px;
-            padding: 8px 10px;
-            background-color: #004386;
-            border-radius: 4px;
-        }
-    </style>
-</head>
-<body>
-    <div class="container my-4">
+<style>
+.club-badge { width:32px; height:32px; object-fit:contain; border-radius:50%; border:1px solid #e0e0e0; transition:transform .15s; }
+.club-badge:hover { transform:scale(1.25); z-index:10; position:relative; }
+.club-container { display:flex; flex-wrap:wrap; gap:4px; margin-top:.5rem; }
+</style>
+
+<div class="container-fluid px-3 px-md-4 py-3" style="max-width:900px; margin:0 auto;">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h1><i class="bi bi-trophy"></i> Gestión de Torneos</h1>
             <a href="crear.php" class="btn btn-primary">
@@ -252,30 +162,20 @@ include '../header.php';
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Inicializar tooltips
             const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-            tooltipTriggerList.map(function (tooltipTriggerEl) {
-                return new bootstrap.Tooltip(tooltipTriggerEl);
-            });
-            
-            // Configurar modal de eliminación
-            const confirmarEliminarModal = document.getElementById('confirmarEliminar');
-            if (confirmarEliminarModal) {
-                confirmarEliminarModal.addEventListener('show.bs.modal', function (event) {
-                    const button = event.relatedTarget;
-                    const id = button.getAttribute('data-id');
-                    const nombre = button.getAttribute('data-nombre');
-                    
-                    document.getElementById('nombreTorneoEliminar').textContent = nombre;
-                    document.getElementById('btnConfirmarEliminar').href = 'eliminar.php?id=' + id;
+            tooltipTriggerList.map(el => new bootstrap.Tooltip(el));
+
+            const modal = document.getElementById('confirmarEliminar');
+            if (modal) {
+                modal.addEventListener('show.bs.modal', function(e) {
+                    const btn = e.relatedTarget;
+                    document.getElementById('nombreTorneoEliminar').textContent = btn.dataset.nombre;
+                    document.getElementById('btnConfirmarEliminar').href = 'eliminar.php?id=' + btn.dataset.id;
                 });
             }
         });
     </script>
-</body>
-</html>
 
 <?php include '../footer.php'; ?>

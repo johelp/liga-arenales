@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 ob_start();
 session_start();
 require_once '../../config.php';
@@ -79,11 +79,13 @@ if (isset($_POST['guardar_resultados'])) {
             continue;
         }
 
-        $gl = $jugado ? (int)$goles_local     : null;
-        $gv = $jugado ? (int)$goles_visitante : null;
+        $gl          = $jugado ? (int)$goles_local     : null;
+        $gv          = $jugado ? (int)$goles_visitante : null;
+        $comentario  = trim($_POST['comentario'][$key] ?? '');
+        $comentario  = $comentario === '' ? null : $comentario;
 
-        $stmt = $pdo->prepare("UPDATE partidos SET goles_local = ?, goles_visitante = ?, jugado = ? WHERE id_partido = ?");
-        if ($stmt->execute([$gl, $gv, $jugado, $id_partido])) {
+        $stmt = $pdo->prepare("UPDATE partidos SET goles_local = ?, goles_visitante = ?, jugado = ?, comentario = ? WHERE id_partido = ?");
+        if ($stmt->execute([$gl, $gv, $jugado, $comentario, $id_partido])) {
             $resultados_guardados++;
         }
     }
@@ -100,7 +102,7 @@ if (isset($_POST['guardar_resultados'])) {
 // ---- Cargar partidos para mostrar ----
 if ($id_torneo_sel && $id_division_sel) {
     $sql = "SELECT p.id_partido, p.fecha_hora, p.fase, p.fecha_numero,
-                   p.goles_local, p.goles_visitante, p.jugado,
+                   p.goles_local, p.goles_visitante, p.jugado, p.comentario,
                    cl.nombre_corto AS local_nombre, cl.escudo_url AS local_escudo,
                    cv.nombre_corto AS visitante_nombre, cv.escudo_url AS visitante_escudo
             FROM partidos p
@@ -125,16 +127,10 @@ if ($id_torneo_sel && $id_division_sel) {
 }
 
 include '../header.php';
+
 ?>
-<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Cargar Resultados</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
 <style>
+
 :root {
     --liga-blue: #004386;
     --liga-blue-dark: #003066;
@@ -273,9 +269,51 @@ body { background: #f0f4f8; }
 }
 .badge-pendientes { background: #ffc107; color: #212529; }
 .badge-jugados    { background: #198754; color: #fff; }
+
+/* ── Comentario ── */
+.comentario-bloque {
+    padding: .4rem .75rem .6rem;
+    border-top: 1px solid #f0f2f5;
+}
+.comentario-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .3rem;
+    margin-bottom: .35rem;
+}
+.chip {
+    font-size: .7rem;
+    padding: .15rem .5rem;
+    border-radius: 20px;
+    background: #e8f0fb;
+    color: var(--liga-blue);
+    cursor: pointer;
+    font-weight: 600;
+    border: 1px solid #c5d8f5;
+    user-select: none;
+    transition: background .15s;
+}
+.chip:hover { background: #c5d8f5; }
+.comentario-input {
+    width: 100%;
+    font-size: .8rem;
+    border: 1px solid #dde3ec;
+    border-radius: 8px;
+    padding: .35rem .6rem;
+    resize: none;
+    color: #333;
+    background: #fafbfc;
+    font-family: inherit;
+    line-height: 1.4;
+}
+.comentario-input:focus {
+    outline: none;
+    border-color: var(--liga-blue);
+    box-shadow: 0 0 0 .15rem rgba(0,67,134,.12);
+    background: #fff;
+}
+
 </style>
-</head>
-<body>
 <div class="container-fluid px-2 px-md-4 py-3" style="max-width:680px; margin: 0 auto;">
 
     <div class="d-flex align-items-center gap-2 mb-3">
@@ -448,6 +486,18 @@ body { background: #f0f4f8; }
                     <span class="equipo-nombre"><?= htmlspecialchars($p['visitante_nombre']) ?></span>
                 </div>
             </div>
+            <!-- Comentario / notas del partido -->
+            <div class="comentario-bloque">
+                <div class="comentario-chips">
+                    <span class="chip" data-texto="Goles: ">Goles</span>
+                    <span class="chip" data-texto="Amonestados: ">Amonestados</span>
+                    <span class="chip" data-texto="Expulsado: ">Expulsado</span>
+                    <span class="chip" data-texto="Penal: ">Penal</span>
+                    <span class="chip" data-texto="Sin incidencias">Sin incidencias</span>
+                </div>
+                <textarea class="comentario-input" name="comentario[]"
+                          placeholder="Notas del partido…" rows="2"><?= htmlspecialchars($p['comentario'] ?? '') ?></textarea>
+            </div>
         </div>
         <?php endforeach; ?>
 
@@ -523,6 +573,22 @@ selDivision.addEventListener('change', cargarFases);
 selFase.addEventListener('change', async () => { await cargarFechas(); navigate(); });
 selFecha.addEventListener('change', navigate);
 
+// Chips de comentario predefinidos
+document.querySelectorAll('.chip').forEach(chip => {
+    chip.addEventListener('click', function() {
+        const textarea = this.closest('.comentario-bloque').querySelector('.comentario-input');
+        const txt = this.dataset.texto;
+        const cur = textarea.value.trim();
+        // Si el chip es "Sin incidencias", reemplaza todo; si no, agrega al final
+        if (txt === 'Sin incidencias') {
+            textarea.value = txt;
+        } else {
+            textarea.value = cur ? cur + (cur.endsWith('.') || cur.endsWith(',') ? ' ' : '. ') + txt : txt;
+        }
+        textarea.focus();
+    });
+});
+
 // Auto-check "jugado" cuando se ingresan ambos goles
 document.querySelectorAll('.partido-card').forEach(card => {
     const inputLocal     = card.querySelector('.score-local');
@@ -539,5 +605,5 @@ document.querySelectorAll('.partido-card').forEach(card => {
     inputVisitante.addEventListener('input', autoCheck);
 });
 </script>
-</body>
-</html>
+
+<?php include '../footer.php'; ?>

@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 require_once '../../config.php';
 session_start();
 
@@ -84,17 +84,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $torneo_seleccionado && $division_s
 }
 
 include '../header.php';
-?>
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reprogramar Fecha - Liga Deportiva</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <style>
+?>
+<style>
+
         body {
             background-color: #f8f9fa;
         }
@@ -124,10 +117,9 @@ include '../header.php';
         .form-select, .form-control {
             border-radius: 8px;
         }
-    </style>
-</head>
-<body>
-    <div class="container">
+    
+</style>
+<div class="container">
         <div class="card">
             <div class="card-header">
                 <i class="bi bi-calendar-event"></i> Reprogramar Fecha Completa
@@ -212,5 +204,5 @@ include '../header.php';
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+
+<?php include '../footer.php'; ?>

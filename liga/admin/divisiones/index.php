@@ -1,7 +1,6 @@
 <?php
-ob_start(); // Asegurar que no haya problemas con los headers
+ob_start();session_start();
 require_once '../../config.php';
-session_start();
 
 // Verificar autenticación
 if (!isset($_SESSION['admin_autenticado']) || $_SESSION['admin_autenticado'] !== true) {
@@ -30,54 +29,7 @@ try {
 // Incluir header después de las redirecciones
 include '../header.php';
 ?>
-
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestión de Divisiones - Liga Deportiva</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <style>
-        body {
-            background-color: #f8f9fa;
-        }
-        .card {
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
-            border: none;
-        }
-        .card-header {
-            background-color: #004386;
-            color: white;
-            border-radius: 10px 10px 0 0 !important;
-            font-weight: 600;
-            padding: 15px 20px;
-        }
-        .btn-primary {
-            background-color: #004386;
-            border-color: #004386;
-        }
-        .btn-primary:hover {
-            background-color: #003366;
-            border-color: #003366;
-        }
-        .table th {
-            background-color: #f1f1f1;
-        }
-        .badge-primary {
-            background-color: #004386;
-            color: white;
-        }
-        .action-buttons .btn {
-            margin-right: 5px;
-        }
-    </style>
-</head>
-<body>
-    <div class="container my-4">
+<div class="container my-4">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h1><i class="bi bi-list-ol"></i> Gestión de Divisiones</h1>
             <a href="crear.php" class="btn btn-primary">
@@ -177,5 +129,6 @@ include '../header.php';
             modal.show();
         }
     </script>
-</body>
-</html>
+
+
+<?php include '../footer.php'; ?>

@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 ob_start(); // Garantizar que no haya problemas con los headers
 session_start();
 require_once '../../config.php'; // Incluir config.php PRIMERO
@@ -127,17 +127,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 // Incluir header después de todas las redirecciones
 include '../header.php';
-?>
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cargar Fecha Completa - Liga Deportiva</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <style>
+?>
+<style>
+
         body {
             background-color: #f8f9fa;
         }
@@ -242,10 +235,9 @@ include '../header.php';
         .fecha-info p {
             margin-bottom: 5px;
         }
-    </style>
-</head>
-<body>
-    <div class="container my-4">
+    
+</style>
+<div class="container my-4">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h1><i class="bi bi-calendar-plus"></i> Cargar Fecha Completa</h1>
             <a href="index.php" class="btn btn-secondary">
@@ -603,5 +595,5 @@ include '../header.php';
             })();
         });
     </script>
-</body>
-</html>
+
+<?php include '../footer.php'; ?>

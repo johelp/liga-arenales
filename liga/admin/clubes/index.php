@@ -1,7 +1,6 @@
 <?php
-ob_start(); // Garantizar que no haya problemas con los headers
+ob_start();session_start();
 require_once '../../config.php';
-session_start();
 
 // Verificar autenticación
 if (!isset($_SESSION['admin_autenticado']) || $_SESSION['admin_autenticado'] !== true) {
@@ -23,142 +22,7 @@ try {
 // Incluir header después de posibles redirecciones
 include '../header.php';
 ?>
-
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestión de Clubes - Liga Deportiva</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <style>
-        body {
-            background-color: #f8f9fa;
-        }
-        .card {
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
-            border: none;
-        }
-        .card-header {
-            background-color: #004386;
-            color: white;
-            border-radius: 10px 10px 0 0 !important;
-            font-weight: 600;
-            padding: 15px 20px;
-        }
-        .btn-primary {
-            background-color: #004386;
-            border-color: #004386;
-            border-radius: 8px;
-            padding: 10px 20px;
-            font-weight: 500;
-            transition: all 0.3s;
-        }
-        .btn-primary:hover {
-            background-color: #003366;
-            border-color: #003366;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-        .btn-outline-primary {
-            color: #004386;
-            border-color: #004386;
-        }
-        .btn-outline-primary:hover {
-            background-color: #004386;
-            color: white;
-        }
-        .btn-outline-danger:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-        .club-card {
-            transition: transform 0.3s, box-shadow 0.3s;
-            height: 100%;
-        }
-        .club-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-        }
-        .club-escudo {
-            width: 60px;
-            height: 60px;
-            object-fit: contain;
-            border: 1px solid #dee2e6;
-            background-color: white;
-            padding: 2px;
-        }
-        .club-escudo-placeholder {
-            width: 60px;
-            height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: #e9ecef;
-            color: #6c757d;
-            font-size: 1.5rem;
-            border-radius: 50%;
-        }
-        .empty-state {
-            text-align: center;
-            padding: 40px;
-            color: #6c757d;
-        }
-        .empty-state i {
-            font-size: 4rem;
-            margin-bottom: 20px;
-            color: #dee2e6;
-        }
-        .search-box {
-            position: relative;
-            margin-bottom: 20px;
-        }
-        .search-box i {
-            position: absolute;
-            left: 15px;
-            top: 12px;
-            color: #6c757d;
-        }
-        .search-box input {
-            padding-left: 40px;
-            border-radius: 20px;
-        }
-        .table-responsive {
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-        .table {
-            margin-bottom: 0;
-        }
-        .table th {
-            background-color: #004386;
-            color: white;
-            border: none;
-        }
-        .table thead tr {
-            border: none;
-        }
-        .table tbody tr:hover {
-            background-color: #f1f8ff;
-        }
-        .view-toggle {
-            margin-bottom: 20px;
-        }
-        .view-toggle .btn {
-            border-radius: 20px;
-            padding: 5px 15px;
-        }
-        .btn-sm {
-            border-radius: 6px;
-        }
-    </style>
-</head>
-<body>
-    <div class="container my-4">
+<div class="container my-4">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h1><i class="bi bi-shield"></i> Gestión de Clubes</h1>
             <a href="crear.php" class="btn btn-primary">
@@ -378,5 +242,6 @@ include '../header.php';
             }
         });
     </script>
-</body>
-</html>
+
+
+<?php include '../footer.php'; ?>

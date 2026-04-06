@@ -1,7 +1,6 @@
 <?php
-ob_start(); // Garantizar que no haya problemas con los headers
+ob_start();session_start();
 require_once '../../config.php';
-session_start();
 
 // Verificar autenticación
 if (!isset($_SESSION['admin_autenticado']) || $_SESSION['admin_autenticado'] !== true) {
@@ -80,90 +79,7 @@ if ($id_division > 0) {
 // Incluir header después de todas las redirecciones potenciales
 include '../header.php';
 ?>
-
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editar División - Liga Deportiva</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <style>
-        body {
-            background-color: #f8f9fa;
-        }
-        .card {
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
-            border: none;
-        }
-        .card-header {
-            background-color: #004386;
-            color: white;
-            border-radius: 10px 10px 0 0 !important;
-            font-weight: 600;
-            padding: 15px 20px;
-        }
-        .form-label {
-            font-weight: 500;
-            color: #495057;
-        }
-        .form-control {
-            border-radius: 8px;
-            padding: 10px 15px;
-            border: 1px solid #ced4da;
-        }
-        .form-control:focus {
-            border-color: #80bdff;
-            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-        }
-        .btn-primary {
-            background-color: #004386;
-            border-color: #004386;
-            border-radius: 8px;
-            padding: 10px 20px;
-            font-weight: 500;
-            transition: all 0.3s;
-        }
-        .btn-primary:hover {
-            background-color: #003366;
-            border-color: #003366;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-        .btn-secondary {
-            border-radius: 8px;
-            padding: 10px 20px;
-            font-weight: 500;
-        }
-        .preview-panel {
-            background-color: #e9ecef;
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-        .division-name {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: #004386;
-            margin-bottom: 10px;
-        }
-        .division-order {
-            display: inline-block;
-            background-color: #004386;
-            color: white;
-            font-weight: 600;
-            padding: 5px 15px;
-            border-radius: 20px;
-            margin-top: 5px;
-        }
-    </style>
-</head>
-<body>
-    <div class="container my-4">
+<div class="container my-4">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h1><i class="bi bi-pencil-square"></i> Editar División</h1>
             <a href="index.php" class="btn btn-secondary">
@@ -266,5 +182,6 @@ include '../header.php';
             })();
         });
     </script>
-</body>
-</html>
+
+
+<?php include '../footer.php'; ?>

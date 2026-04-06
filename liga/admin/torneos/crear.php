@@ -1,9 +1,8 @@
 <?php
-require_once '../../config.php'; // Incluir config.php PRIMERO
-include '../header.php';       // Luego incluir el header
-$pdo = conectarDB();
+ob_start();
+session_start();
+require_once '../../config.php';
 
-// Verificar autenticación
 if (!isset($_SESSION['admin_autenticado']) || $_SESSION['admin_autenticado'] !== true) {
     header('Location: ../login.php');
     exit();
@@ -11,18 +10,19 @@ if (!isset($_SESSION['admin_autenticado']) || $_SESSION['admin_autenticado'] !==
 
 $pdo = conectarDB();
 
-$errores = [];
-$nombre = '';
+$errores   = [];
+$nombre    = '';
 $fecha_inicio = '';
-$fecha_fin = '';
-$descripcion = '';
+$fecha_fin    = '';
+$descripcion  = '';
+$activo       = 1;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $nombre = trim($_POST['nombre']);
-    $fecha_inicio = trim($_POST['fecha_inicio']);
-    $fecha_fin = trim($_POST['fecha_fin']);
-    $descripcion = trim($_POST['descripcion']);
-    $activo = isset($_POST['activo']) ? 1 : 0;
+    $nombre       = trim($_POST['nombre']       ?? '');
+    $fecha_inicio = trim($_POST['fecha_inicio'] ?? '');
+    $fecha_fin    = trim($_POST['fecha_fin']    ?? '');
+    $descripcion  = trim($_POST['descripcion']  ?? '');
+    $activo       = isset($_POST['activo']) ? 1 : 0;
 
     if (empty($nombre)) {
         $errores['nombre'] = 'El nombre del torneo es obligatorio.';
@@ -31,20 +31,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($errores)) {
         $stmt = $pdo->prepare("INSERT INTO torneos (nombre, fecha_inicio, fecha_fin, activo, descripcion)
                                VALUES (:nombre, :fecha_inicio, :fecha_fin, :activo, :descripcion)");
-        $stmt->bindParam(':nombre', $nombre);
-
-        // Corrected handling for fecha_inicio
-        $fecha_inicio_param = $fecha_inicio ?: null;
-        $stmt->bindParam(':fecha_inicio', $fecha_inicio_param);
-
-        // Corrected handling for fecha_fin
-        $fecha_fin_param = $fecha_fin ?: null;
-        $stmt->bindParam(':fecha_fin', $fecha_fin_param);
-
-        $stmt->bindParam(':activo', $activo, PDO::PARAM_INT);
-        $stmt->bindParam(':descripcion', $descripcion);
+        $stmt->bindParam(':nombre',       $nombre);
+        $stmt->bindParam(':fecha_inicio', $fecha_inicio ?: null);
+        $stmt->bindParam(':fecha_fin',    $fecha_fin    ?: null);
+        $stmt->bindParam(':activo',       $activo, PDO::PARAM_INT);
+        $stmt->bindParam(':descripcion',  $descripcion);
 
         if ($stmt->execute()) {
+            $_SESSION['mensaje']      = 'Torneo creado correctamente.';
+            $_SESSION['tipo_mensaje'] = 'success';
             header('Location: index.php');
             exit();
         } else {
@@ -52,74 +47,77 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
+
+include '../header.php';
 ?>
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crear Nuevo Torneo</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../../css/style.css">
-</head>
-<body>
-<?php include '../header.php'; ?>
+<div class="container-fluid px-3 px-md-4 py-3" style="max-width:680px; margin:0 auto;">
 
-    <div class="container my-5">
-        <h1>Crear Nuevo Torneo</h1>
-
-        <nav class="mb-3">
-            <ul class="nav">
-                <li class="nav-item">
-                    <a class="nav-link" href="index.php">Volver a la Lista de Torneos</a>
-                </li>
-            </ul>
-        </nav>
-
-        <main>
-            <?php if (!empty($errores['general'])): ?>
-                <div class="alert alert-danger"><?= $errores['general']; ?></div>
-            <?php endif; ?>
-
-            <form method="post" class="row g-3">
-                <div class="col-md-6">
-                    <label for="nombre" class="form-label">Nombre del Torneo:</label>
-                    <input type="text" class="form-control" id="nombre" name="nombre" value="<?= htmlspecialchars($nombre); ?>" required>
-                    <?php if (!empty($errores['nombre'])): ?>
-                        <div class="text-danger"><?= $errores['nombre']; ?></div>
-                    <?php endif; ?>
-                </div>
-
-                <div class="col-md-3">
-                    <label for="fecha_inicio" class="form-label">Fecha de Inicio (opcional):</label>
-                    <input type="date" class="form-control" id="fecha_inicio" name="fecha_inicio" value="<?= htmlspecialchars($fecha_inicio); ?>">
-                </div>
-
-                <div class="col-md-3">
-                    <label for="fecha_fin" class="form-label">Fecha de Fin (opcional):</label>
-                    <input type="date" class="form-control" id="fecha_fin" name="fecha_fin" value="<?= htmlspecialchars($fecha_fin); ?>">
-                </div>
-
-                <div class="col-12">
-                    <label for="descripcion" class="form-label">Descripción (opcional):</label>
-                    <textarea class="form-control" id="descripcion" name="descripcion" rows="3"><?= htmlspecialchars($descripcion); ?></textarea>
-                </div>
-
-                <div class="col-12">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="activo" name="activo" checked>
-                        <label class="form-check-label" for="activo">Activo</label>
-                    </div>
-                </div>
-
-                <div class="col-12">
-                    <button type="submit" class="btn btn-primary">Guardar Torneo</button>
-                </div>
-            </form>
-        </main>
+    <div class="d-flex align-items-center gap-2 mb-4">
+        <a href="index.php" class="btn btn-sm btn-outline-secondary rounded-pill">
+            <i class="bi bi-arrow-left"></i>
+        </a>
+        <h5 class="mb-0 fw-bold"><i class="bi bi-trophy-fill text-warning me-1"></i> Crear Torneo</h5>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+    <?php if (!empty($errores['general'])): ?>
+        <div class="alert alert-danger rounded-3"><?= $errores['general'] ?></div>
+    <?php endif; ?>
+
+    <div class="bg-white rounded-3 shadow-sm p-4">
+        <form method="post" novalidate>
+
+            <div class="mb-3">
+                <label for="nombre" class="form-label fw-semibold">Nombre del torneo <span class="text-danger">*</span></label>
+                <input type="text" class="form-control <?= !empty($errores['nombre']) ? 'is-invalid' : '' ?>"
+                       id="nombre" name="nombre"
+                       value="<?= htmlspecialchars($nombre) ?>"
+                       placeholder="Ej: Torneo Apertura 2025"
+                       required autofocus>
+                <?php if (!empty($errores['nombre'])): ?>
+                    <div class="invalid-feedback"><?= $errores['nombre'] ?></div>
+                <?php endif; ?>
+            </div>
+
+            <div class="row g-3 mb-3">
+                <div class="col-6">
+                    <label for="fecha_inicio" class="form-label fw-semibold">Fecha inicio</label>
+                    <input type="date" class="form-control" id="fecha_inicio" name="fecha_inicio"
+                           value="<?= htmlspecialchars($fecha_inicio) ?>">
+                </div>
+                <div class="col-6">
+                    <label for="fecha_fin" class="form-label fw-semibold">Fecha fin</label>
+                    <input type="date" class="form-control" id="fecha_fin" name="fecha_fin"
+                           value="<?= htmlspecialchars($fecha_fin) ?>">
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="descripcion" class="form-label fw-semibold">Descripción <span class="text-muted fw-normal">(opcional)</span></label>
+                <textarea class="form-control" id="descripcion" name="descripcion" rows="3"
+                          placeholder="Descripción o dedicatoria del torneo"><?= htmlspecialchars($descripcion) ?></textarea>
+            </div>
+
+            <div class="mb-4">
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="activo" name="activo"
+                           <?= $activo ? 'checked' : '' ?>>
+                    <label class="form-check-label fw-semibold" for="activo">
+                        Torneo activo <span class="text-muted fw-normal small">(visible en la app pública)</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="d-flex gap-2">
+                <a href="index.php" class="btn btn-outline-secondary rounded-pill px-4">Cancelar</a>
+                <button type="submit" class="btn btn-primary rounded-pill px-4 fw-semibold">
+                    <i class="bi bi-save-fill me-1"></i> Guardar Torneo
+                </button>
+            </div>
+
+        </form>
+    </div>
+
+</div>
+
+<?php include '../footer.php'; ?>

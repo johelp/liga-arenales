@@ -140,91 +140,7 @@ try {
 // Incluir el header después de verificar posibles redirecciones
 include '../header.php';
 ?>
-
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editar Partido - Liga Deportiva</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <style>
-        body {
-            background-color: #f8f9fa;
-        }
-        .card {
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
-            border: none;
-        }
-        .card-header {
-            background-color: #004386;
-            color: white;
-            border-radius: 10px 10px 0 0 !important;
-            font-weight: 600;
-            padding: 15px 20px;
-        }
-        .form-label {
-            font-weight: 500;
-            color: #495057;
-        }
-        .form-control, .form-select {
-            border-radius: 8px;
-            padding: 10px 15px;
-            border: 1px solid #ced4da;
-        }
-        .form-control:focus, .form-select:focus {
-            border-color: #80bdff;
-            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-        }
-        .btn-primary {
-            background-color: #004386;
-            border-color: #004386;
-            border-radius: 8px;
-            padding: 10px 20px;
-            font-weight: 500;
-            transition: all 0.3s;
-        }
-        .btn-primary:hover {
-            background-color: #003366;
-            border-color: #003366;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-        .btn-secondary {
-            border-radius: 8px;
-            padding: 10px 20px;
-            font-weight: 500;
-        }
-        .match-preview {
-            background-color: #e9ecef;
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-        .team-name {
-            font-weight: 600;
-            font-size: 18px;
-            margin: 10px 0;
-        }
-        .score {
-            font-size: 24px;
-            font-weight: 700;
-            background-color: #fff;
-            border-radius: 8px;
-            padding: 5px 15px;
-            display: inline-block;
-            margin: 0 10px;
-            min-width: 60px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
-    </style>
-</head>
-<body>
-    <div class="container mt-4 mb-5">
+<div class="container mt-4 mb-5">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h1><i class="bi bi-pencil-square"></i> Editar Partido</h1>
             <a href="index.php" class="btn btn-secondary">
@@ -458,5 +374,6 @@ include '../header.php';
             });
         })();
     </script>
-</body>
-</html>
+
+
+<?php include '../footer.php'; ?>

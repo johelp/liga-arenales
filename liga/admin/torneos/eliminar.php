@@ -1,38 +1,45 @@
 <?php
-require_once '../../config.php'; // Incluir config.php PRIMERO
-include '../header.php';       // Luego incluir el header
+ob_start();
+session_start();
+require_once '../../config.php';
+
+if (!isset($_SESSION['admin_autenticado']) || $_SESSION['admin_autenticado'] !== true) {
+    header('Location: ../login.php');
+    exit();
+}
+
 $pdo = conectarDB();
-
-
 $id_torneo = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
-if ($id_torneo > 0) {
-    // Verificar si el torneo tiene partidos o clubes asignados
-    $stmt_partidos = $pdo->prepare("SELECT COUNT(*) FROM partidos WHERE id_torneo = :id");
-    $stmt_partidos->bindParam(':id', $id_torneo, PDO::PARAM_INT);
-    $stmt_partidos->execute();
-    $count_partidos = $stmt_partidos->fetchColumn();
-
-    $stmt_clubes_en_division = $pdo->prepare("SELECT COUNT(*) FROM clubes_en_division WHERE id_torneo = :id");
-    $stmt_clubes_en_division->bindParam(':id', $id_torneo, PDO::PARAM_INT);
-    $stmt_clubes_en_division->execute();
-    $count_clubes_en_division = $stmt_clubes_en_division->fetchColumn();
-
-    if ($count_partidos > 0 || $count_clubes_en_division > 0) {
-        echo "<script>alert('No se puede eliminar el torneo porque tiene partidos o clubes asignados.'); window.location.href = 'index.php';</script>";
-        exit();
-    }
-
-    $stmt = $pdo->prepare("DELETE FROM torneos WHERE id_torneo = :id");
-    $stmt->bindParam(':id', $id_torneo, PDO::PARAM_INT);
-
-    if ($stmt->execute()) {
-        header('Location: index.php');
-        exit();
-    } else {
-        die("Error al eliminar el torneo.");
-    }
-} else {
-    die("ID de torneo inválido.");
+if ($id_torneo <= 0) {
+    $_SESSION['mensaje']      = 'ID de torneo inválido.';
+    $_SESSION['tipo_mensaje'] = 'danger';
+    header('Location: index.php');
+    exit();
 }
-?>
+
+// Verificar dependencias
+$count_partidos = $pdo->prepare("SELECT COUNT(*) FROM partidos WHERE id_torneo = ?");
+$count_partidos->execute([$id_torneo]);
+
+$count_clubes = $pdo->prepare("SELECT COUNT(*) FROM clubes_en_division WHERE id_torneo = ?");
+$count_clubes->execute([$id_torneo]);
+
+if ($count_partidos->fetchColumn() > 0 || $count_clubes->fetchColumn() > 0) {
+    $_SESSION['mensaje']      = 'No se puede eliminar el torneo porque tiene partidos o clubes asignados.';
+    $_SESSION['tipo_mensaje'] = 'danger';
+    header('Location: index.php');
+    exit();
+}
+
+$stmt = $pdo->prepare("DELETE FROM torneos WHERE id_torneo = ?");
+if ($stmt->execute([$id_torneo])) {
+    $_SESSION['mensaje']      = 'Torneo eliminado correctamente.';
+    $_SESSION['tipo_mensaje'] = 'success';
+} else {
+    $_SESSION['mensaje']      = 'Error al eliminar el torneo.';
+    $_SESSION['tipo_mensaje'] = 'danger';
+}
+
+header('Location: index.php');
+exit();

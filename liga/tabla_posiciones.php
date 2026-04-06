@@ -96,32 +96,25 @@ function generarTablaPosiciones(PDO $pdo, int $id_torneo, int $id_division, ?str
     if ($fase !== null) {
         $sql_partidos = "SELECT p.id_club_local, p.goles_local, p.id_club_visitante, p.goles_visitante, p.fecha_hora
                           FROM partidos p
-                          WHERE p.id_torneo = :id_torneo
-                            AND p.id_division = :id_division
+                          WHERE p.id_torneo = ?
+                            AND p.id_division = ?
                             AND p.jugado = 1
-                            AND p.fase = :fase
+                            AND p.fase = ?
                           ORDER BY p.fecha_hora DESC";
         $stmt_partidos = $pdo->prepare($sql_partidos);
-        $stmt_partidos->bindParam(':id_torneo', $id_torneo, PDO::PARAM_INT);
-        $stmt_partidos->bindParam(':id_division', $id_division, PDO::PARAM_INT);
-        $stmt_partidos->bindParam(':fase', $fase, PDO::PARAM_STR);
+        $stmt_partidos->execute([$id_torneo, $id_division, $fase]);
     } else {
         $placeholders = implode(',', array_fill(0, count($fases_playoff), '?'));
         $sql_partidos = "SELECT p.id_club_local, p.goles_local, p.id_club_visitante, p.goles_visitante, p.fecha_hora
                           FROM partidos p
-                          WHERE p.id_torneo = :id_torneo
-                            AND p.id_division = :id_division
+                          WHERE p.id_torneo = ?
+                            AND p.id_division = ?
                             AND p.jugado = 1
                             AND p.fase NOT IN ($placeholders)
                           ORDER BY p.fecha_hora DESC";
         $stmt_partidos = $pdo->prepare($sql_partidos);
-        $stmt_partidos->bindParam(':id_torneo', $id_torneo, PDO::PARAM_INT);
-        $stmt_partidos->bindParam(':id_division', $id_division, PDO::PARAM_INT);
-        foreach ($fases_playoff as $i => $fp) {
-            $stmt_partidos->bindValue($i + 1, $fp, PDO::PARAM_STR);
-        }
+        $stmt_partidos->execute(array_merge([$id_torneo, $id_division], $fases_playoff));
     }
-    $stmt_partidos->execute();
     $partidos = $stmt_partidos->fetchAll(PDO::FETCH_ASSOC);
 
     // Tracking de últimos 5 resultados
