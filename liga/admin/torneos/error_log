@@ -1,0 +1,114 @@
+[31-Mar-2025 10:34:47 UTC] PHP Fatal error:  Uncaught Error: PDOStatement::bindParam(): Argument #2 ($var) cannot be passed by reference in /home/lvuizwgj/ascensiondigital.ar/liga/admin/torneos/crear.php:34
+Stack trace:
+#0 {main}
+  thrown in /home/lvuizwgj/ascensiondigital.ar/liga/admin/torneos/crear.php on line 34
+[31-Mar-2025 10:36:31 UTC] PHP Fatal error:  Uncaught Error: PDOStatement::bindParam(): Argument #2 ($var) cannot be passed by reference in /home/lvuizwgj/ascensiondigital.ar/liga/admin/torneos/crear.php:34
+Stack trace:
+#0 {main}
+  thrown in /home/lvuizwgj/ascensiondigital.ar/liga/admin/torneos/crear.php on line 34
+[31-Mar-2025 13:05:57 UTC] PHP Fatal error:  Uncaught Error: PDOStatement::bindParam(): Argument #2 ($var) cannot be passed by reference in /home/lvuizwgj/ascensiondigital.ar/liga/admin/torneos/editar.php:47
+Stack trace:
+#0 {main}
+  thrown in /home/lvuizwgj/ascensiondigital.ar/liga/admin/torneos/editar.php on line 47
+[31-Mar-2025 13:14:50 UTC] PHP Warning:  include(header.php): Failed to open stream: No such file or directory in /home/lvuizwgj/ascensiondigital.ar/liga/admin/torneos/index.php on line 3
+[31-Mar-2025 13:14:50 UTC] PHP Warning:  include(header.php): Failed to open stream: No such file or directory in /home/lvuizwgj/ascensiondigital.ar/liga/admin/torneos/index.php on line 3
+[31-Mar-2025 13:14:50 UTC] PHP Warning:  include(): Failed opening 'header.php' for inclusion (include_path='.:/opt/cpanel/ea-php82/root/usr/share/pear') in /home/lvuizwgj/ascensiondigital.ar/liga/admin/torneos/index.php on line 3
+[31-Mar-2025 13:14:50 UTC] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in /home/lvuizwgj/ascensiondigital.ar/liga/admin/torneos/index.php on line 4
+[31-Mar-2025 13:14:50 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/lvuizwgj/ascensiondigital.ar/liga/admin/torneos/index.php:3) in /home/lvuizwgj/ascensiondigital.ar/liga/admin/torneos/index.php on line 8
+[31-Mar-2025 13:17:04 UTC] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in /home/lvuizwgj/ascensiondigital.ar/liga/admin/torneos/index.php on line 4
+[31-Mar-2025 13:17:04 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/lvuizwgj/ascensiondigital.ar/liga/admin/header.php:4) in /home/lvuizwgj/ascensiondigital.ar/liga/admin/torneos/index.php on line 8
+[31-Mar-2025 13:17:07 UTC] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in /home/lvuizwgj/ascensiondigital.ar/liga/admin/torneos/index.php on line 4
+[31-Mar-2025 13:17:07 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/lvuizwgj/ascensiondigital.ar/liga/admin/header.php:4) in /home/lvuizwgj/ascensiondigital.ar/liga/admin/torneos/index.php on line 8
+[31-Mar-2025 13:18:13 UTC] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in /home/lvuizwgj/ascensiondigital.ar/liga/admin/torneos/editar.php on line 4
+[31-Mar-2025 13:18:13 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/lvuizwgj/ascensiondigital.ar/liga/admin/header.php:4) in /home/lvuizwgj/ascensiondigital.ar/liga/admin/torneos/editar.php on line 8
+[31-Mar-2025 13:18:15 UTC] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in /home/lvuizwgj/ascensiondigital.ar/liga/admin/torneos/editar.php on line 4
+[31-Mar-2025 13:18:15 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/lvuizwgj/ascensiondigital.ar/liga/admin/header.php:4) in /home/lvuizwgj/ascensiondigital.ar/liga/admin/torneos/editar.php on line 8
+[31-Mar-2025 13:18:17 UTC] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in /home/lvuizwgj/ascensiondigital.ar/liga/admin/torneos/editar.php on line 4
+[31-Mar-2025 13:18:17 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/lvuizwgj/ascensiondigital.ar/liga/admin/header.php:4) in /home/lvuizwgj/ascensiondigital.ar/liga/admin/torneos/editar.php on line 8
+[31-Mar-2025 14:20:05 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function conectarDB() in /home/lvuizwgj/ascensiondigital.ar/liga/admin/torneos/index.php:31
+Stack trace:
+#0 {main}
+  thrown in /home/lvuizwgj/ascensiondigital.ar/liga/admin/torneos/index.php on line 31
+[31-Mar-2025 14:20:50 UTC] PHP Warning:  require_once(../config.php): Failed to open stream: No such file or directory in /home/lvuizwgj/ascensiondigital.ar/liga/admin/torneos/index.php on line 2
+[31-Mar-2025 14:20:50 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '../config.php' (include_path='.:/opt/cpanel/ea-php82/root/usr/share/pear') in /home/lvuizwgj/ascensiondigital.ar/liga/admin/torneos/index.php:2
+Stack trace:
+#0 {main}
+  thrown in /home/lvuizwgj/ascensiondigital.ar/liga/admin/torneos/index.php on line 2
+[31-Mar-2025 14:20:52 UTC] PHP Warning:  require_once(../config.php): Failed to open stream: No such file or directory in /home/lvuizwgj/ascensiondigital.ar/liga/admin/torneos/index.php on line 2
+[31-Mar-2025 14:20:52 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '../config.php' (include_path='.:/opt/cpanel/ea-php82/root/usr/share/pear') in /home/lvuizwgj/ascensiondigital.ar/liga/admin/torneos/index.php:2
+Stack trace:
+#0 {main}
+  thrown in /home/lvuizwgj/ascensiondigital.ar/liga/admin/torneos/index.php on line 2
+[31-Mar-2025 14:31:30 UTC] PHP Warning:  require_once(../config.php): Failed to open stream: No such file or directory in /home/lvuizwgj/ascensiondigital.ar/liga/admin/torneos/index.php on line 2
+[31-Mar-2025 14:31:30 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '../config.php' (include_path='.:/opt/cpanel/ea-php82/root/usr/share/pear') in /home/lvuizwgj/ascensiondigital.ar/liga/admin/torneos/index.php:2
+Stack trace:
+#0 {main}
+  thrown in /home/lvuizwgj/ascensiondigital.ar/liga/admin/torneos/index.php on line 2
+[31-Mar-2025 14:31:41 UTC] PHP Warning:  require_once(../config.php): Failed to open stream: No such file or directory in /home/lvuizwgj/ascensiondigital.ar/liga/admin/torneos/index.php on line 2
+[31-Mar-2025 14:31:41 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '../config.php' (include_path='.:/opt/cpanel/ea-php82/root/usr/share/pear') in /home/lvuizwgj/ascensiondigital.ar/liga/admin/torneos/index.php:2
+Stack trace:
+#0 {main}
+  thrown in /home/lvuizwgj/ascensiondigital.ar/liga/admin/torneos/index.php on line 2
+[31-Mar-2025 14:32:18 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'c.nombre' in 'field list' in /home/lvuizwgj/ascensiondigital.ar/liga/admin/torneos/index.php:14
+Stack trace:
+#0 /home/lvuizwgj/ascensiondigital.ar/liga/admin/torneos/index.php(14): PDO->prepare('SELECT c.id_clu...')
+#1 /home/lvuizwgj/ascensiondigital.ar/liga/admin/torneos/index.php(39): obtenerClubesParticipantesConEscudos(Object(PDO), 1)
+#2 {main}
+  thrown in /home/lvuizwgj/ascensiondigital.ar/liga/admin/torneos/index.php on line 14
+[31-Mar-2025 14:33:38 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'c.escudo' in 'field list' in /home/lvuizwgj/ascensiondigital.ar/liga/admin/torneos/index.php:14
+Stack trace:
+#0 /home/lvuizwgj/ascensiondigital.ar/liga/admin/torneos/index.php(14): PDO->prepare('SELECT c.id_clu...')
+#1 /home/lvuizwgj/ascensiondigital.ar/liga/admin/torneos/index.php(39): obtenerClubesParticipantesConEscudos(Object(PDO), 1)
+#2 {main}
+  thrown in /home/lvuizwgj/ascensiondigital.ar/liga/admin/torneos/index.php on line 14
+[31-Mar-2025 14:33:40 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'c.escudo' in 'field list' in /home/lvuizwgj/ascensiondigital.ar/liga/admin/torneos/index.php:14
+Stack trace:
+#0 /home/lvuizwgj/ascensiondigital.ar/liga/admin/torneos/index.php(14): PDO->prepare('SELECT c.id_clu...')
+#1 /home/lvuizwgj/ascensiondigital.ar/liga/admin/torneos/index.php(39): obtenerClubesParticipantesConEscudos(Object(PDO), 1)
+#2 {main}
+  thrown in /home/lvuizwgj/ascensiondigital.ar/liga/admin/torneos/index.php on line 14
+[31-Mar-2025 14:34:40 UTC] PHP Warning:  Undefined array key "nombre" in /home/lvuizwgj/ascensiondigital.ar/liga/admin/torneos/index.php on line 48
+[31-Mar-2025 14:34:40 UTC] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in /home/lvuizwgj/ascensiondigital.ar/liga/admin/torneos/index.php on line 48
+[31-Mar-2025 14:34:40 UTC] PHP Warning:  Undefined array key "nombre" in /home/lvuizwgj/ascensiondigital.ar/liga/admin/torneos/index.php on line 48
+[31-Mar-2025 14:34:40 UTC] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in /home/lvuizwgj/ascensiondigital.ar/liga/admin/torneos/index.php on line 48
+[31-Mar-2025 14:34:40 UTC] PHP Warning:  Undefined array key "nombre" in /home/lvuizwgj/ascensiondigital.ar/liga/admin/torneos/index.php on line 48
+[31-Mar-2025 14:34:40 UTC] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in /home/lvuizwgj/ascensiondigital.ar/liga/admin/torneos/index.php on line 48
+[31-Mar-2025 14:34:40 UTC] PHP Warning:  Undefined array key "nombre" in /home/lvuizwgj/ascensiondigital.ar/liga/admin/torneos/index.php on line 48
+[31-Mar-2025 14:34:40 UTC] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in /home/lvuizwgj/ascensiondigital.ar/liga/admin/torneos/index.php on line 48
+[31-Mar-2025 14:34:40 UTC] PHP Warning:  Undefined array key "nombre" in /home/lvuizwgj/ascensiondigital.ar/liga/admin/torneos/index.php on line 48
+[31-Mar-2025 14:34:40 UTC] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in /home/lvuizwgj/ascensiondigital.ar/liga/admin/torneos/index.php on line 48
+[31-Mar-2025 14:34:40 UTC] PHP Warning:  Undefined array key "nombre" in /home/lvuizwgj/ascensiondigital.ar/liga/admin/torneos/index.php on line 48
+[31-Mar-2025 14:34:40 UTC] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in /home/lvuizwgj/ascensiondigital.ar/liga/admin/torneos/index.php on line 48
+[31-Mar-2025 14:34:40 UTC] PHP Warning:  Undefined array key "nombre" in /home/lvuizwgj/ascensiondigital.ar/liga/admin/torneos/index.php on line 48
+[31-Mar-2025 14:34:40 UTC] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in /home/lvuizwgj/ascensiondigital.ar/liga/admin/torneos/index.php on line 48
+[31-Mar-2025 14:34:40 UTC] PHP Warning:  Undefined array key "nombre" in /home/lvuizwgj/ascensiondigital.ar/liga/admin/torneos/index.php on line 48
+[31-Mar-2025 14:34:40 UTC] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in /home/lvuizwgj/ascensiondigital.ar/liga/admin/torneos/index.php on line 48
+[31-Mar-2025 14:34:40 UTC] PHP Warning:  include(../footer.php): Failed to open stream: No such file or directory in /home/lvuizwgj/ascensiondigital.ar/liga/admin/torneos/index.php on line 70
+[31-Mar-2025 14:34:40 UTC] PHP Warning:  include(../footer.php): Failed to open stream: No such file or directory in /home/lvuizwgj/ascensiondigital.ar/liga/admin/torneos/index.php on line 70
+[31-Mar-2025 14:34:40 UTC] PHP Warning:  include(): Failed opening '../footer.php' for inclusion (include_path='.:/opt/cpanel/ea-php82/root/usr/share/pear') in /home/lvuizwgj/ascensiondigital.ar/liga/admin/torneos/index.php on line 70
+[31-Mar-2025 14:36:06 UTC] PHP Warning:  Undefined array key "nombre_corto" in /home/lvuizwgj/ascensiondigital.ar/liga/admin/torneos/index.php on line 37
+[31-Mar-2025 14:36:06 UTC] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in /home/lvuizwgj/ascensiondigital.ar/liga/admin/torneos/index.php on line 37
+[31-Mar-2025 14:36:06 UTC] PHP Warning:  include(../footer.php): Failed to open stream: No such file or directory in /home/lvuizwgj/ascensiondigital.ar/liga/admin/torneos/index.php on line 70
+[31-Mar-2025 14:36:06 UTC] PHP Warning:  include(../footer.php): Failed to open stream: No such file or directory in /home/lvuizwgj/ascensiondigital.ar/liga/admin/torneos/index.php on line 70
+[31-Mar-2025 14:36:06 UTC] PHP Warning:  include(): Failed opening '../footer.php' for inclusion (include_path='.:/opt/cpanel/ea-php82/root/usr/share/pear') in /home/lvuizwgj/ascensiondigital.ar/liga/admin/torneos/index.php on line 70
+[31-Mar-2025 14:36:39 UTC] PHP Warning:  include(../footer.php): Failed to open stream: No such file or directory in /home/lvuizwgj/ascensiondigital.ar/liga/admin/torneos/index.php on line 70
+[31-Mar-2025 14:36:39 UTC] PHP Warning:  include(../footer.php): Failed to open stream: No such file or directory in /home/lvuizwgj/ascensiondigital.ar/liga/admin/torneos/index.php on line 70
+[31-Mar-2025 14:36:39 UTC] PHP Warning:  include(): Failed opening '../footer.php' for inclusion (include_path='.:/opt/cpanel/ea-php82/root/usr/share/pear') in /home/lvuizwgj/ascensiondigital.ar/liga/admin/torneos/index.php on line 70
+[31-Mar-2025 14:58:54 UTC] PHP Warning:  require_once(../config.php): Failed to open stream: No such file or directory in /home/lvuizwgj/ascensiondigital.ar/liga/admin/header.php on line 7
+[31-Mar-2025 14:58:54 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '../config.php' (include_path='.:/opt/cpanel/ea-php82/root/usr/share/pear') in /home/lvuizwgj/ascensiondigital.ar/liga/admin/header.php:7
+Stack trace:
+#0 /home/lvuizwgj/ascensiondigital.ar/liga/admin/torneos/editar.php(101): include()
+#1 {main}
+  thrown in /home/lvuizwgj/ascensiondigital.ar/liga/admin/header.php on line 7
+[31-Mar-2025 15:11:58 UTC] PHP Warning:  require_once(../config.php): Failed to open stream: No such file or directory in /home/lvuizwgj/ascensiondigital.ar/liga/admin/header.php on line 3
+[31-Mar-2025 15:11:58 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '../config.php' (include_path='.:/opt/cpanel/ea-php82/root/usr/share/pear') in /home/lvuizwgj/ascensiondigital.ar/liga/admin/header.php:3
+Stack trace:
+#0 /home/lvuizwgj/ascensiondigital.ar/liga/admin/torneos/index.php(3): include()
+#1 {main}
+  thrown in /home/lvuizwgj/ascensiondigital.ar/liga/admin/header.php on line 3
+[31-Mar-2025 15:12:01 UTC] PHP Warning:  require_once(../config.php): Failed to open stream: No such file or directory in /home/lvuizwgj/ascensiondigital.ar/liga/admin/header.php on line 3
+[31-Mar-2025 15:12:01 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '../config.php' (include_path='.:/opt/cpanel/ea-php82/root/usr/share/pear') in /home/lvuizwgj/ascensiondigital.ar/liga/admin/header.php:3
+Stack trace:
+#0 /home/lvuizwgj/ascensiondigital.ar/liga/admin/torneos/index.php(3): include()
+#1 {main}
+  thrown in /home/lvuizwgj/ascensiondigital.ar/liga/admin/header.php on line 3

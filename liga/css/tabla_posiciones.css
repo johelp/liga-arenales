@@ -1,0 +1,48 @@
+/* Estilos generales para la tabla de posiciones */
+.tabla-posiciones {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    font-size: 0.9em;
+    min-width: 400px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+
+.tabla-posiciones thead tr {
+    background-color: #007bff; /* Un azul de Bootstrap como ejemplo */
+    color: #ffffff;
+    text-align: center;
+    font-weight: bold;
+}
+
+.tabla-posiciones th,
+.tabla-posiciones td {
+    padding: 12px 15px;
+    border: 1px solid #dee2e6; /* Borde gris claro de Bootstrap */
+    text-align: center;
+}
+
+.tabla-posiciones tbody tr {
+    border-bottom: 1px solid #dee2e6;
+}
+
+.tabla-posiciones tbody tr:nth-of-type(even) {
+    background-color: #f3f3f3;
+}
+
+.tabla-posiciones tbody tr:last-of-type {
+    border-bottom: 2px solid #007bff;
+}
+
+.tabla-posiciones tbody tr.active-row {
+    font-weight: bold;
+    color: #007bff;
+}
+
+/* Estilos específicos para las columnas (opcional) */
+.tabla-posiciones th:nth-child(2), /* Club */
+.tabla-posiciones td:nth-child(2) {
+    text-align: left;
+}
+
+/* Puedes agregar más estilos según tus necesidades */
