@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Instructivo · Sistema Liga Deportiva de General Arenales</title>
+<style>
+  :root {
+    --azul:   #004386;
+    --azul2:  #002f63;
+    --dorado: #f0a500;
+    --verde:  #198754;
+    --rojo:   #dc3545;
+    --gris:   #f0f4f8;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+    background: #f8f9fa;
+    color: #222;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  /* ── Portada ── */
+  .cover {
+    background: linear-gradient(135deg, var(--azul) 0%, var(--azul2) 100%);
+    color: #fff;
+    padding: 4rem 2rem 3rem;
+    text-align: center;
+  }
+  .cover .trophy { font-size: 4rem; margin-bottom: 1rem; }
+  .cover h1 { font-size: 2rem; font-weight: 800; letter-spacing: -.01em; }
+  .cover h2 { font-size: 1.1rem; font-weight: 400; opacity: .8; margin-top: .5rem; }
+  .cover .badge-cover {
+    display: inline-block;
+    background: var(--dorado);
+    color: #1a1a1a;
+    font-weight: 700;
+    font-size: .8rem;
+    padding: .3rem 1rem;
+    border-radius: 20px;
+    margin-top: 1.5rem;
+  }
+
+  /* ── Layout ── */
+  .container { max-width: 860px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+
+  /* ── Secciones ── */
+  .section { margin-bottom: 3rem; }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    padding: .75rem 1rem;
+    background: var(--azul);
+    color: #fff;
+    border-radius: 12px;
+    margin-bottom: 1.25rem;
+  }
+  .section-header .icon { font-size: 1.5rem; }
+  .section-header h2 { font-size: 1.1rem; font-weight: 700; }
+  .section-header .num {
+    background: var(--dorado);
+    color: #1a1a1a;
+    font-weight: 800;
+    font-size: .85rem;
+    min-width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* ── Cards ── */
+  .card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 1px 6px rgba(0,0,0,.07);
+    border-left: 4px solid var(--azul);
+  }
+  .card.verde  { border-left-color: var(--verde); }
+  .card.dorado { border-left-color: var(--dorado); }
+  .card.rojo   { border-left-color: var(--rojo); }
+  .card h3 {
+    font-size: .95rem;
+    font-weight: 700;
+    margin-bottom: .5rem;
+    display: flex;
+    align-items: center;
+    gap: .4rem;
+  }
+  .card p  { font-size: .9rem; color: #444; margin-bottom: .4rem; }
+  .card p:last-child { margin-bottom: 0; }
+
+  /* ── Pasos ── */
+  .steps { list-style: none; }
+  .steps li {
+    display: flex;
+    gap: 1rem;
+    padding: .6rem 0;
+    border-bottom: 1px solid #eee;
+    align-items: flex-start;
+    font-size: .9rem;
+  }
+  .steps li:last-child { border-bottom: none; }
+  .steps .step-num {
+    background: var(--azul);
+    color: #fff;
+    font-weight: 700;
+    font-size: .75rem;
+    min-width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: .1rem;
+    flex-shrink: 0;
+  }
+
+  /* ── Tips ── */
+  .tip {
+    background: #fff8e1;
+    border: 1px solid #ffe082;
+    border-radius: 10px;
+    padding: .85rem 1rem;
+    font-size: .88rem;
+    color: #555;
+    margin-bottom: .75rem;
+    display: flex;
+    gap: .6rem;
+    align-items: flex-start;
+  }
+  .tip .tip-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: .05rem; }
+
+  .tip.info {
+    background: #e8f4fd;
+    border-color: #90caf9;
+  }
+  .tip.danger {
+    background: #fdecea;
+    border-color: #f5c6cb;
+  }
+
+  /* ── Badges inline ── */
+  .badge {
+    display: inline-block;
+    font-size: .72rem;
+    font-weight: 700;
+    padding: .15rem .5rem;
+    border-radius: 8px;
+    vertical-align: middle;
+  }
+  .badge-azul   { background: var(--azul);   color: #fff; }
+  .badge-verde  { background: var(--verde);  color: #fff; }
+  .badge-rojo   { background: var(--rojo);   color: #fff; }
+  .badge-dorado { background: var(--dorado); color: #1a1a1a; }
+  .badge-gris   { background: #6c757d; color: #fff; }
+  .badge-naranja { background: #fd7e14; color: #fff; }
+
+  /* ── URL box ── */
+  .url-box {
+    background: #f0f4f8;
+    border: 1px solid #d0dae8;
+    border-radius: 8px;
+    padding: .6rem 1rem;
+    font-family: monospace;
+    font-size: .85rem;
+    color: var(--azul);
+    margin: .5rem 0;
+    word-break: break-all;
+  }
+
+  /* ── Table ── */
+  table { width: 100%; border-collapse: collapse; font-size: .88rem; }
+  th { background: var(--azul); color: #fff; padding: .5rem .75rem; text-align: left; }
+  td { padding: .45rem .75rem; border-bottom: 1px solid #eee; }
+  tr:last-child td { border-bottom: none; }
+  tr:nth-child(even) td { background: #f8f9fa; }
+
+  /* ── Footer ── */
+  .footer {
+    text-align: center;
+    padding: 2rem 1rem;
+    color: #aaa;
+    font-size: .8rem;
+    border-top: 1px solid #e0e0e0;
+  }
+  .footer a { color: var(--azul); text-decoration: none; }
+
+  /* ── Print ── */
+  @media print {
+    body { background: #fff; }
+    .cover { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .section-header { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Portada -->
+<div class="cover">
+  <div class="trophy">🏆</div>
+  <h1>Sistema de Gestión<br>Liga Deportiva de General Arenales</h1>
+  <h2>Manual de uso para administradores y operadores</h2>
+  <span class="badge-cover">Versión 2025 · AscensionDigital.ar</span>
+</div>
+
+<div class="container">
+
+  <!-- Accesos rápidos -->
+  <div class="section" style="margin-top:2rem;">
+    <div class="section-header">
+      <span class="icon">🔗</span>
+      <h2>Accesos al sistema</h2>
+    </div>
+
+    <div class="card verde">
+      <h3>🌐 Portal público (para el público)</h3>
+      <p>Donde los hinchas y el público general consultan la tabla, los resultados y el fixture.</p>
+      <div class="url-box">https://ascensiondigital.ar/liga</div>
+    </div>
+
+    <div class="card">
+      <h3>⚙️ Panel de administración (para la liga)</h3>
+      <p>Acceso exclusivo para administradores y operadores cargadores de resultados.</p>
+      <div class="url-box">https://ascensiondigital.ar/liga/admin</div>
+    </div>
+
+    <div class="tip">
+      <span class="tip-icon">💡</span>
+      <span>Se recomienda guardar el link del panel de administración como acceso directo en el celular. En iOS: Safari → Compartir → "Añadir a pantalla de inicio". En Android: Chrome → Menú → "Agregar a pantalla de inicio".</span>
+    </div>
+  </div>
+
+  <!-- Sección 1: Ingresar -->
+  <div class="section">
+    <div class="section-header">
+      <span class="num">1</span>
+      <span class="icon">🔑</span>
+      <h2>Cómo ingresar al panel</h2>
+    </div>
+
+    <ul class="steps">
+      <li>
+        <span class="step-num">1</span>
+        <span>Abrí el navegador e ingresá a <strong>ascensiondigital.ar/liga/admin</strong></span>
+      </li>
+      <li>
+        <span class="step-num">2</span>
+        <span>Escribí tu <strong>usuario</strong> y <strong>contraseña</strong> en el formulario de login.</span>
+      </li>
+      <li>
+        <span class="step-num">3</span>
+        <span>Tocá <strong>"Ingresar"</strong>. Vas a ver el panel principal con el resumen del torneo activo.</span>
+      </li>
+    </ul>
+
+    <div class="tip danger">
+      <span class="tip-icon">⚠️</span>
+      <span>Si no recordás tu contraseña, contactá al administrador del sistema para que te la resetee.</span>
+    </div>
+  </div>
+
+  <!-- Sección 2: Navegación -->
+  <div class="section">
+    <div class="section-header">
+      <span class="num">2</span>
+      <span class="icon">📱</span>
+      <h2>Navegación del panel</h2>
+    </div>
+
+    <div class="card">
+      <h3>📱 En celular</h3>
+      <p>La navegación principal está en la <strong>barra inferior</strong> con los accesos más usados:</p>
+      <p>
+        <strong>Inicio</strong> ·
+        <strong>Resultados</strong> (cargar) ·
+        <strong>Partidos</strong> ·
+        <strong>Torneos</strong> ·
+        <strong>Más</strong> (resto de secciones)
+      </p>
+      <p>Tocando <strong>"Más"</strong> se abre un panel con acceso a Clubes, Divisiones, Reprogramar, Compartir, Widgets, Usuarios y Salir.</p>
+    </div>
+
+    <div class="card">
+      <h3>🖥️ En computadora</h3>
+      <p>La navegación aparece como una <strong>barra horizontal</strong> debajo del encabezado azul con todos los módulos visibles.</p>
+    </div>
+  </div>
+
+  <!-- Sección 3: Cargar resultados -->
+  <div class="section">
+    <div class="section-header">
+      <span class="num">3</span>
+      <span class="icon">⚽</span>
+      <h2>Cargar resultados (tarea principal)</h2>
+    </div>
+
+    <div class="tip info">
+      <span class="tip-icon">ℹ️</span>
+      <span>Esta es la función que se usa con más frecuencia: cargar los goles de cada partido al finalizar una fecha.</span>
+    </div>
+
+    <ul class="steps">
+      <li>
+        <span class="step-num">1</span>
+        <span>Tocá <strong>"Resultados"</strong> en la barra inferior (o en el menú de escritorio).</span>
+      </li>
+      <li>
+        <span class="step-num">2</span>
+        <span>Elegí el <strong>torneo</strong>, la <strong>división</strong> y el <strong>número de fecha</strong> desde los selectores.</span>
+      </li>
+      <li>
+        <span class="step-num">3</span>
+        <span>Aparece la lista de partidos de esa fecha. Para cada partido, escribí los <strong>goles del local</strong> y los <strong>goles del visitante</strong>.</span>
+      </li>
+      <li>
+        <span class="step-num">4</span>
+        <span>Opcionalmente podés agregar <strong>goles (jugadores)</strong> y <strong>tarjetas</strong> en cada partido.</span>
+      </li>
+      <li>
+        <span class="step-num">5</span>
+        <span>Al terminar de completar todos los partidos, tocá <strong>"Guardar todos"</strong>. El sistema actualiza la tabla de posiciones automáticamente.</span>
+      </li>
+    </ul>
+
+    <div class="tip">
+      <span class="tip-icon">💡</span>
+      <span>Los resultados guardados se reflejan <strong>en tiempo real</strong> en el portal público. No hace falta hacer nada más.</span>
+    </div>
+  </div>
+
+  <!-- Sección 4: Estado en vivo -->
+  <div class="section">
+    <div class="section-header">
+      <span class="num">4</span>
+      <span class="icon">🔴</span>
+      <h2>Gestión de partidos en vivo ("En juego")</h2>
+    </div>
+
+    <p style="margin-bottom:1rem; font-size:.9rem; color:#444;">Cuando llega la hora del partido, podés marcarlo como "en juego" para que aparezca como activo.</p>
+
+    <ul class="steps">
+      <li>
+        <span class="step-num">1</span>
+        <span>Ingresá a <strong>Partidos</strong> desde el menú.</span>
+      </li>
+      <li>
+        <span class="step-num">2</span>
+        <span>El partido que está próximo a jugarse aparece con badge amarillo <span class="badge badge-dorado">POR INICIAR</span>.</span>
+      </li>
+      <li>
+        <span class="step-num">3</span>
+        <span>Tocá el botón <strong>▶ Iniciar</strong> junto al partido. El estado cambia a <span class="badge badge-rojo">● EN JUEGO</span>.</span>
+      </li>
+      <li>
+        <span class="step-num">4</span>
+        <span>Al finalizar, tocá <strong>■ Detener</strong>. Luego cargá el resultado desde "Cargar Resultados".</span>
+      </li>
+    </ul>
+
+    <div class="card dorado">
+      <h3>📊 Estados de un partido</h3>
+      <p><span class="badge badge-gris">Pendiente</span> — Sin jugar todavía</p>
+      <p><span class="badge badge-dorado">Por iniciar</span> — La hora del partido ya llegó (automático)</p>
+      <p><span class="badge badge-rojo">● En juego</span> — Marcado manualmente como en curso</p>
+      <p><span class="badge badge-verde">Jugado</span> — Resultado cargado</p>
+      <p><span class="badge badge-naranja">Reprogramado</span> — Fecha cambiada</p>
+      <p><span class="badge badge-gris">Suspendido</span> — Partido sin fecha nueva</p>
+    </div>
+  </div>
+
+  <!-- Sección 5: Reprogramar -->
+  <div class="section">
+    <div class="section-header">
+      <span class="num">5</span>
+      <span class="icon">📅</span>
+      <h2>Reprogramar o suspender partidos</h2>
+    </div>
+
+    <p style="margin-bottom:1rem; font-size:.9rem; color:#444;">Cuando un partido se suspende por lluvia u otro motivo, podés registrarlo en el sistema.</p>
+
+    <ul class="steps">
+      <li>
+        <span class="step-num">1</span>
+        <span>Desde <strong>Más → Reprogramar</strong> (en celular) o <strong>Partidos → Reprogramar</strong> en la barra de escritorio.</span>
+      </li>
+      <li>
+        <span class="step-num">2</span>
+        <span>Elegí si querés hacerlo por <strong>partido individual</strong> o por <strong>fecha completa</strong>.</span>
+      </li>
+      <li>
+        <span class="step-num">3</span>
+        <span>Ingresá la <strong>nueva fecha y hora</strong> (si ya se sabe) o simplemente marcalo como <strong>Suspendido</strong>.</span>
+      </li>
+      <li>
+        <span class="step-num">4</span>
+        <span>Opcionalmente ingresá el <strong>motivo</strong> (ej: "Lluvia", "Campo en mal estado"). Se muestra en el portal público.</span>
+      </li>
+      <li>
+        <span class="step-num">5</span>
+        <span>El sistema guarda la fecha original automáticamente. En el portal, el partido muestra el badge <span class="badge badge-naranja">REPROG.</span> o <span class="badge badge-gris">SUSPENDIDO</span>.</span>
+      </li>
+    </ul>
+
+    <div class="tip">
+      <span class="tip-icon">💡</span>
+      <span>Si luego se confirma una nueva fecha para un partido suspendido, usá <strong>"Reactivar"</strong> para quitarle el estado suspendido y luego editá la fecha.</span>
+    </div>
+  </div>
+
+  <!-- Sección 6: Torneos -->
+  <div class="section">
+    <div class="section-header">
+      <span class="num">6</span>
+      <span class="icon">🏆</span>
+      <h2>Gestión de torneos</h2>
+    </div>
+
+    <ul class="steps">
+      <li>
+        <span class="step-num">1</span>
+        <span>Ingresá a <strong>Torneos</strong> en el menú.</span>
+      </li>
+      <li>
+        <span class="step-num">2</span>
+        <span>Para crear uno nuevo tocá <strong>"Nuevo Torneo"</strong>. Ingresá nombre, fechas y elegí el formato.</span>
+      </li>
+      <li>
+        <span class="step-num">3</span>
+        <span>El <strong>formato</strong> determina cómo se calcula la tabla:
+          <ul style="margin-top:.3rem; padding-left:1.2rem; font-size:.88rem;">
+            <li><strong>Liga / Clasificación:</strong> todos contra todos, tabla de posiciones tradicional.</li>
+            <li><strong>Play Off:</strong> eliminatorias por etapas (Cuartos, Semi, Final).</li>
+            <li><strong>Grupos + Play Off:</strong> fase inicial con tabla, luego eliminatorias.</li>
+          </ul>
+        </span>
+      </li>
+      <li>
+        <span class="step-num">4</span>
+        <span>Marcá la casilla <strong>"Torneo activo"</strong> para que aparezca por defecto en el portal público.</span>
+      </li>
+    </ul>
+
+    <div class="tip danger">
+      <span class="tip-icon">⚠️</span>
+      <span>Solo debe haber <strong>un torneo activo a la vez</strong> para que el portal público lo muestre por defecto correctamente.</span>
+    </div>
+  </div>
+
+  <!-- Sección 7: Cargar partidos -->
+  <div class="section">
+    <div class="section-header">
+      <span class="num">7</span>
+      <span class="icon">🗓️</span>
+      <h2>Cargar el fixture (partidos de una fecha)</h2>
+    </div>
+
+    <ul class="steps">
+      <li>
+        <span class="step-num">1</span>
+        <span>Ingresá a <strong>Partidos → Cargar Fecha</strong> (o desde "Más" en el celular).</span>
+      </li>
+      <li>
+        <span class="step-num">2</span>
+        <span>Seleccioná el <strong>torneo</strong>, la <strong>división</strong> y el <strong>número de fecha</strong>.</span>
+      </li>
+      <li>
+        <span class="step-num">3</span>
+        <span>Completá los enfrentamientos: local, visitante, fecha/hora, cancha y árbitro.</span>
+      </li>
+      <li>
+        <span class="step-num">4</span>
+        <span>Guardá. Los partidos aparecen en el portal como próximos.</span>
+      </li>
+    </ul>
+
+    <div class="tip info">
+      <span class="tip-icon">ℹ️</span>
+      <span>Si el fixture es similar al año anterior, podés usar <strong>"Copiar Partidos"</strong> para duplicar una fecha y solo ajustar los datos que cambiaron.</span>
+    </div>
+  </div>
+
+  <!-- Sección 8: Compartir -->
+  <div class="section">
+    <div class="section-header">
+      <span class="num">8</span>
+      <span class="icon">📤</span>
+      <h2>Compartir resultados en redes</h2>
+    </div>
+
+    <ul class="steps">
+      <li>
+        <span class="step-num">1</span>
+        <span>Ingresá a <strong>Compartir</strong> (barra de menú o desde "Más").</span>
+      </li>
+      <li>
+        <span class="step-num">2</span>
+        <span>Elegí el torneo, la división y el tipo de contenido (Tabla, Resultados, Próximos).</span>
+      </li>
+      <li>
+        <span class="step-num">3</span>
+        <span>El sistema genera una <strong>imagen lista para publicar</strong> en Instagram, Facebook o WhatsApp.</span>
+      </li>
+      <li>
+        <span class="step-num">4</span>
+        <span>Tocá <strong>"Descargar imagen"</strong> o compartila directamente desde el celular.</span>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Sección 9: Clubes y divisiones -->
+  <div class="section">
+    <div class="section-header">
+      <span class="num">9</span>
+      <span class="icon">🛡️</span>
+      <h2>Clubes y divisiones</h2>
+    </div>
+
+    <div class="card">
+      <h3>🛡️ Clubes</h3>
+      <p>Desde <strong>Más → Clubes</strong> podés ver, crear, editar y eliminar clubes.</p>
+      <p>Cada club tiene: nombre corto, nombre completo, escudo (URL de imagen) y datos de contacto.</p>
+    </div>
+
+    <div class="card">
+      <h3>📋 Divisiones</h3>
+      <p>Desde <strong>Más → Divisiones</strong> se gestionan las categorías (Primera, Reserva, Femenino, etc.).</p>
+      <p>El campo <strong>"Orden"</strong> determina en qué posición aparece cada división en los selectores del portal.</p>
+    </div>
+
+    <div class="tip info">
+      <span class="tip-icon">ℹ️</span>
+      <span>Para asignar qué clubes participan en qué división dentro de un torneo, usá la opción <strong>"Clubes en División"</strong> dentro del panel de administración.</span>
+    </div>
+  </div>
+
+  <!-- Sección 10: Usuarios operadores -->
+  <div class="section">
+    <div class="section-header">
+      <span class="num">10</span>
+      <span class="icon">👥</span>
+      <h2>Usuarios operadores</h2>
+    </div>
+
+    <p style="margin-bottom:1rem; font-size:.9rem; color:#444;">Podés crear usuarios para que otras personas carguen resultados, con acceso limitado solo a los torneos que vos les asignés.</p>
+
+    <ul class="steps">
+      <li>
+        <span class="step-num">1</span>
+        <span>Ingresá a <strong>Usuarios</strong> (barra de escritorio) o <strong>Más → Usuarios</strong> en celular.</span>
+      </li>
+      <li>
+        <span class="step-num">2</span>
+        <span>Tocá <strong>"Nuevo usuario"</strong>. Ingresá nombre de usuario, contraseña y seleccioná los torneos a los que puede acceder.</span>
+      </li>
+      <li>
+        <span class="step-num">3</span>
+        <span>El operador puede ingresar con sus credenciales y cargar resultados solo de sus torneos asignados.</span>
+      </li>
+    </ul>
+
+    <div class="tip">
+      <span class="tip-icon">💡</span>
+      <span>El <strong>superadministrador</strong> (usuario "admin") tiene acceso completo a todo el sistema sin restricciones.</span>
+    </div>
+  </div>
+
+  <!-- Sección 11: Widgets -->
+  <div class="section">
+    <div class="section-header">
+      <span class="num">11</span>
+      <span class="icon">🪟</span>
+      <h2>Widgets embebibles</h2>
+    </div>
+
+    <p style="margin-bottom:1rem; font-size:.9rem; color:#444;">El sistema puede embeberse en otros sitios web (municipalidad, radio, etc.) mostrando la tabla o resultados en tiempo real.</p>
+
+    <div class="card">
+      <h3>🪟 Cómo obtener el código</h3>
+      <p>Ingresá a <strong>Widgets</strong> desde el menú. Elegí el tipo de contenido y copiá el código HTML que aparece.</p>
+      <p>Ese código se pega en cualquier sitio web para mostrar el contenido actualizado automáticamente.</p>
+    </div>
+
+    <div class="tip info">
+      <span class="tip-icon">ℹ️</span>
+      <span>El widget se actualiza solo: no hace falta hacer nada en el sitio externo cuando cambian los resultados.</span>
+    </div>
+  </div>
+
+  <!-- Tabla resumen funciones -->
+  <div class="section">
+    <div class="section-header">
+      <span class="icon">📋</span>
+      <h2>Resumen de funciones por rol</h2>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Función</th>
+          <th>Admin</th>
+          <th>Operador</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Cargar resultados</td><td>✅</td><td>✅ (sus torneos)</td></tr>
+        <tr><td>Marcar partido "En juego"</td><td>✅</td><td>✅</td></tr>
+        <tr><td>Reprogramar / suspender</td><td>✅</td><td>✅</td></tr>
+        <tr><td>Compartir en redes</td><td>✅</td><td>✅</td></tr>
+        <tr><td>Crear/editar torneos</td><td>✅</td><td>❌</td></tr>
+        <tr><td>Crear/editar clubes</td><td>✅</td><td>❌</td></tr>
+        <tr><td>Crear/editar divisiones</td><td>✅</td><td>❌</td></tr>
+        <tr><td>Gestionar usuarios</td><td>✅</td><td>❌</td></tr>
+        <tr><td>Widgets y embeds</td><td>✅</td><td>❌</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Preguntas frecuentes -->
+  <div class="section">
+    <div class="section-header">
+      <span class="icon">❓</span>
+      <h2>Preguntas frecuentes</h2>
+    </div>
+
+    <div class="card">
+      <h3>❓ Cargué un resultado mal, ¿cómo lo corrijo?</h3>
+      <p>Ingresá a <strong>Partidos</strong>, buscá el partido y tocá el ícono de <strong>editar (lápiz)</strong>. Corregí los goles y guardá. La tabla se recalcula automáticamente.</p>
+    </div>
+
+    <div class="card">
+      <h3>❓ El portal público no muestra el torneo nuevo</h3>
+      <p>Verificá que el torneo tenga la casilla <strong>"Activo"</strong> marcada al editarlo. Solo el torneo activo aparece por defecto en el portal.</p>
+    </div>
+
+    <div class="card">
+      <h3>❓ ¿Cómo agrego un club nuevo a un torneo ya creado?</h3>
+      <p>Primero creá el club en <strong>Más → Clubes</strong>. Luego ingresá a <strong>"Clubes en División"</strong> y asignalo al torneo y división correspondiente.</p>
+    </div>
+
+    <div class="card">
+      <h3>❓ El partido figura como "Por iniciar" solo, ¿es automático?</h3>
+      <p>Sí. Cuando llega la hora cargada en el partido, el sistema lo marca automáticamente como "Por iniciar". Vos solo tenés que tocar "Iniciar" cuando arranca el partido.</p>
+    </div>
+
+    <div class="card rojo">
+      <h3>⚠️ Me aparece un error al cargar resultados</h3>
+      <p>Si aparece un error genérico, intentá recargar la página. Si el problema persiste, contactá al administrador del sistema indicando qué estabas haciendo y qué mensaje apareció.</p>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  <p>Liga Deportiva de General Arenales · Sistema desarrollado por <a href="https://ascensiondigital.ar" target="_blank">AscensionDigital.ar</a></p>
+  <p style="margin-top:.3rem;">FM Encuentro 103.1 Mhz · General Arenales, Provincia de Buenos Aires</p>
+</div>
+
+</body>
+</html>

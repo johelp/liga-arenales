@@ -35,12 +35,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($errores)) {
         $stmt = $pdo->prepare("INSERT INTO torneos (nombre, fecha_inicio, fecha_fin, activo, descripcion, formato)
                                VALUES (:nombre, :fecha_inicio, :fecha_fin, :activo, :descripcion, :formato)");
-        $stmt->bindParam(':nombre',       $nombre);
-        $stmt->bindParam(':fecha_inicio', $fecha_inicio ?: null);
-        $stmt->bindParam(':fecha_fin',    $fecha_fin    ?: null);
-        $stmt->bindParam(':activo',       $activo, PDO::PARAM_INT);
-        $stmt->bindParam(':descripcion',  $descripcion);
-        $stmt->bindParam(':formato',      $formato);
+        $stmt->bindValue(':nombre',       $nombre);
+        $stmt->bindValue(':fecha_inicio', $fecha_inicio ?: null);
+        $stmt->bindValue(':fecha_fin',    $fecha_fin    ?: null);
+        $stmt->bindValue(':activo',       $activo, PDO::PARAM_INT);
+        $stmt->bindValue(':descripcion',  $descripcion);
+        $stmt->bindValue(':formato',      $formato);
 
         if ($stmt->execute()) {
             $_SESSION['mensaje']      = 'Torneo creado correctamente.';
