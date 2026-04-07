@@ -235,7 +235,9 @@ function nav_active(string $dir, string $file = ''): string {
             ['', 'widgets.php',   'admin', 'bi-window-stack', 'Widgets'],
             ['', 'usuarios.php',  'admin', 'bi-people-fill',  'Usuarios'],
         ];
-        foreach ($dnav as [$dir, $file, $chk_dir, $ico, $lbl, $extra = '']) {
+        foreach ($dnav as $item) {
+            [$dir, $file, $chk_dir, $ico, $lbl] = $item;
+            $extra  = $item[5] ?? '';
             $active = '';
             if ($dir && strpos(dirname($_SERVER['PHP_SELF']), $dir) !== false) $active = 'active';
             elseif ($file && $current_file === $file && (!$chk_dir || $current_dir === $chk_dir)) $active = 'active';
