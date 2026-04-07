@@ -214,6 +214,9 @@ function nav_active(string $dir, string $file = ''): string {
         <span style="background:rgba(240,165,0,.25);color:var(--liga-accent);font-size:.62rem;padding:.1rem .4rem;border-radius:10px;font-weight:700;">ADMIN</span>
         <?php endif; ?>
     </span>
+    <a href="<?= $app_root ?>instructivo-liga.html" target="_blank" class="btn-logout" title="Ayuda / Instructivo">
+        <i class="bi bi-question-circle"></i>
+    </a>
     <a href="<?= $base_path ?>logout.php" class="btn-logout" title="Salir">
         <i class="bi bi-box-arrow-right"></i>
         <span class="d-none d-sm-inline ms-1" style="font-size:.8rem;">Salir</span>
@@ -247,6 +250,11 @@ function nav_active(string $dir, string $file = ''): string {
             echo "<li class='nav-item'><a class='nav-link $active $extra' href='$href'><i class='bi $ico'></i> $lbl</a></li>";
         }
         ?>
+        <li class="nav-item ms-auto">
+            <a class="nav-link" href="<?= $app_root ?>instructivo-liga.html" target="_blank" style="color:#888;">
+                <i class="bi bi-question-circle-fill"></i> Ayuda
+            </a>
+        </li>
     </ul>
 </nav>
 
@@ -308,6 +316,9 @@ function nav_active(string $dir, string $file = ''): string {
             </a>
             <a href="<?= $app_root ?>admin/usuarios.php" class="mas-btn <?= ($current_file === 'usuarios.php' && $current_dir === 'admin') ? 'active' : '' ?>" data-bs-dismiss="offcanvas">
                 <i class="bi bi-people-fill"></i>Usuarios
+            </a>
+            <a href="<?= $app_root ?>instructivo-liga.html" target="_blank" class="mas-btn" data-bs-dismiss="offcanvas">
+                <i class="bi bi-question-circle-fill"></i>Ayuda
             </a>
             <a href="<?= $base_path ?>logout.php" class="mas-btn danger" data-bs-dismiss="offcanvas">
                 <i class="bi bi-box-arrow-right"></i>Salir
