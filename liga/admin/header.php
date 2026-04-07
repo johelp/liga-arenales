@@ -1,11 +1,10 @@
 <?php
-$admin_nombre    = isset($_SESSION['admin_nombre'])  ? htmlspecialchars($_SESSION['admin_nombre'])  : 'Admin';
-$es_superadmin   = $_SESSION['es_superadmin'] ?? true;
-$torneos_perm    = $_SESSION['torneos_permitidos'] ?? [];
-$app_root     = '/liga/';
-$base_path    = $app_root . 'admin/';
-$current_file = basename($_SERVER['PHP_SELF']);
-$current_dir  = basename(dirname($_SERVER['PHP_SELF']));
+$admin_nombre  = isset($_SESSION['admin_nombre'])  ? htmlspecialchars($_SESSION['admin_nombre'])  : 'Admin';
+$es_superadmin = $_SESSION['es_superadmin'] ?? true;
+$app_root      = '/liga/';
+$base_path     = $app_root . 'admin/';
+$current_file  = basename($_SERVER['PHP_SELF']);
+$current_dir   = basename(dirname($_SERVER['PHP_SELF']));
 
 function nav_active(string $dir, string $file = ''): string {
     global $current_dir, $current_file;
@@ -19,7 +18,6 @@ function nav_active(string $dir, string $file = ''): string {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>Admin · Liga Deportiva Arenales</title>
@@ -30,218 +28,147 @@ function nav_active(string $dir, string $file = ''): string {
         --liga-blue:      #004386;
         --liga-blue-dark: #003066;
         --liga-accent:    #f0a500;
-        --nav-height:     56px;
-        --bottom-nav-h:   60px;
-        --safe-bottom:    env(safe-area-inset-bottom, 0px);
+        --nav-h:          56px;
+        --bot-nav-h:      58px;
+        --safe-b:         env(safe-area-inset-bottom, 0px);
     }
 
-    /* ─── Reset & base ─────────────────────────────────────── */
+    /* ── Base ─────────────────────────────────────────────── */
     *, *::before, *::after { box-sizing: border-box; }
     html { -webkit-text-size-adjust: 100%; }
-    body  { background: #f0f4f8; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; }
+    body { background: #f0f4f8; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; }
 
-    /* ─── Top bar ───────────────────────────────────────────── */
+    /* ── Top bar ───────────────────────────────────────────── */
     .admin-topbar {
         background: var(--liga-blue);
         color: #fff;
-        height: var(--nav-height);
+        height: var(--nav-h);
         display: flex;
         align-items: center;
         padding: 0 1rem;
-        padding-left: max(1rem, env(safe-area-inset-left));
-        padding-right: max(1rem, env(safe-area-inset-right));
         position: sticky;
         top: 0;
-        z-index: 1030;
+        z-index: 1040;
         box-shadow: 0 2px 8px rgba(0,0,0,.25);
     }
     .admin-topbar .brand {
-        font-weight: 700;
-        font-size: 1rem;
-        letter-spacing: .02em;
-        color: #fff;
-        text-decoration: none;
-        display: flex;
-        align-items: center;
-        gap: .45rem;
+        font-weight: 700; font-size: 1rem;
+        color: #fff; text-decoration: none;
+        display: flex; align-items: center; gap: .4rem;
     }
     .admin-topbar .brand i { color: var(--liga-accent); font-size: 1.2rem; }
     .admin-topbar .spacer  { flex: 1; }
-    .admin-topbar .user-badge {
-        font-size: .78rem;
-        opacity: .85;
-        display: flex;
-        align-items: center;
-        gap: .3rem;
+    .admin-topbar .user-pill {
+        font-size: .75rem; opacity: .85;
+        display: flex; align-items: center; gap: .3rem;
     }
     .admin-topbar .btn-logout {
-        color: rgba(255,255,255,.75);
-        font-size: .85rem;
-        padding: .3rem .6rem;
-        border-radius: 8px;
-        text-decoration: none;
-        transition: background .2s;
+        color: rgba(255,255,255,.75); font-size: .85rem;
+        padding: .3rem .6rem; border-radius: 8px;
+        text-decoration: none; transition: background .2s;
         -webkit-tap-highlight-color: transparent;
     }
     .admin-topbar .btn-logout:hover { background: rgba(255,255,255,.15); color: #fff; }
 
-    /* ─── Desktop sub-nav ───────────────────────────────────── */
+    /* ── Desktop sub-nav ───────────────────────────────────── */
     .admin-sidenav { display: none; }
 
-    /* ─── Main content ──────────────────────────────────────── */
+    /* ── Content area ──────────────────────────────────────── */
     .admin-content {
-        padding-bottom: calc(var(--bottom-nav-h) + var(--safe-bottom) + 8px);
-        min-height: calc(100vh - var(--nav-height));
+        padding-bottom: calc(var(--bot-nav-h) + var(--safe-b) + 4px);
     }
 
-    /* ─── Mobile bottom nav ─────────────────────────────────── */
+    /* ── Mobile bottom nav ─────────────────────────────────── */
     .admin-bottomnav {
         position: fixed;
         bottom: 0; left: 0; right: 0;
+        height: calc(var(--bot-nav-h) + var(--safe-b));
+        padding-bottom: var(--safe-b);
         background: #fff;
         border-top: 1px solid #e0e0e0;
-        z-index: 1029;
+        z-index: 1035;
         display: flex;
-        justify-content: space-around;
-        align-items: stretch;
-        padding-bottom: var(--safe-bottom);
-        box-shadow: 0 -2px 12px rgba(0,0,0,.10);
+        box-shadow: 0 -2px 10px rgba(0,0,0,.10);
     }
-    .admin-bottomnav a,
-    .admin-bottomnav button {
+    .admin-bottomnav .bn-item {
         flex: 1;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        gap: .08rem;
-        color: #999;
+        gap: .06rem;
         text-decoration: none;
-        font-size: .6rem;
-        font-weight: 500;
-        padding: .45rem .2rem;
+        color: #999;
+        font-size: .58rem;
+        font-weight: 600;
+        padding: .3rem .1rem;
         border: none;
         background: none;
         cursor: pointer;
         -webkit-tap-highlight-color: transparent;
-        transition: color .12s;
-        min-height: var(--bottom-nav-h);
+        transition: color .1s;
+        line-height: 1;
     }
-    .admin-bottomnav a i,
-    .admin-bottomnav button i { font-size: 1.35rem; line-height: 1; }
-    .admin-bottomnav a.active,
-    .admin-bottomnav a.active i { color: var(--liga-blue); }
-    .admin-bottomnav a.btn-cargar {
-        color: #fff;
-        background: var(--liga-blue);
-        border-radius: 0;
+    .admin-bottomnav .bn-item i  { font-size: 1.3rem; display: block; }
+    .admin-bottomnav .bn-item.active, .admin-bottomnav .bn-item.active i { color: var(--liga-blue); }
+    .admin-bottomnav .bn-item.bn-primary {
+        color: #fff; background: var(--liga-blue);
     }
-    .admin-bottomnav a.btn-cargar i { color: #fff; }
-    .admin-bottomnav button.btn-mas { color: #555; }
-    .admin-bottomnav button.btn-mas.open { color: var(--liga-blue); }
+    .admin-bottomnav .bn-item.bn-primary i { color: #fff; }
 
-    /* ─── "Más" slide-up panel ──────────────────────────────── */
-    .mas-overlay {
-        display: none;
-        position: fixed;
-        inset: 0;
-        background: rgba(0,0,0,.45);
-        z-index: 1028;
-        -webkit-tap-highlight-color: transparent;
+    /* ── Global mobile tweaks ──────────────────────────────── */
+    @media (max-width: 767px) {
+        /* Evita zoom al enfocar inputs en iOS */
+        input, select, textarea { font-size: 16px !important; }
+
+        /* Botones de acción más grandes */
+        .action-btn { min-width: 34px; min-height: 34px; }
+
+        /* Guardar flotante sube sobre el bottom nav */
+        .guardar-fab {
+            bottom: calc(var(--bot-nav-h) + var(--safe-b) + .75rem) !important;
+        }
+
+        /* Columnas ocultas en tablas */
+        .col-hide-mobile { display: none !important; }
+
+        /* Padding de contenedores */
+        .container-fluid, .container { padding-left: .75rem; padding-right: .75rem; }
+
+        /* Tabla scroll horizontal */
+        .table-responsive { -webkit-overflow-scrolling: touch; }
     }
-    .mas-overlay.visible { display: block; }
-    .mas-panel {
-        position: fixed;
-        bottom: calc(var(--bottom-nav-h) + var(--safe-bottom));
-        left: 0; right: 0;
-        background: #fff;
-        border-radius: 18px 18px 0 0;
-        z-index: 1029;
-        padding: .75rem 1rem 1rem;
-        transform: translateY(100%);
-        transition: transform .25s cubic-bezier(.4,0,.2,1);
-        box-shadow: 0 -4px 20px rgba(0,0,0,.15);
-    }
-    .mas-panel.visible { transform: translateY(0); }
-    .mas-panel .mas-title {
-        font-size: .7rem;
-        font-weight: 700;
-        color: #aaa;
-        letter-spacing: .08em;
-        text-transform: uppercase;
-        margin-bottom: .6rem;
-        padding-bottom: .4rem;
-        border-bottom: 1px solid #f0f0f0;
-    }
+
+    /* ── Offcanvas "Más" ───────────────────────────────────── */
     .mas-grid {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
-        gap: .5rem;
+        gap: .6rem;
+        padding: .5rem 0 .5rem;
     }
-    .mas-item {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: .25rem;
-        padding: .6rem .3rem;
-        border-radius: 12px;
-        color: #444;
-        text-decoration: none;
-        font-size: .68rem;
-        font-weight: 500;
-        background: #f8f9fc;
+    .mas-btn {
+        display: flex; flex-direction: column;
+        align-items: center; justify-content: center;
+        gap: .3rem; padding: .75rem .3rem;
+        border-radius: 14px;
+        background: #f0f4f8;
+        color: #333; text-decoration: none;
+        font-size: .68rem; font-weight: 600;
+        border: 1px solid transparent;
         -webkit-tap-highlight-color: transparent;
         transition: background .15s;
     }
-    .mas-item:active { background: #e8eef8; color: var(--liga-blue); }
-    .mas-item i { font-size: 1.45rem; color: var(--liga-blue); }
-    .mas-item.active { background: #e8eef8; color: var(--liga-blue); font-weight: 700; }
+    .mas-btn i    { font-size: 1.5rem; color: var(--liga-blue); }
+    .mas-btn:active { background: #dde6f5; }
+    .mas-btn.active { background: #dde6f5; border-color: var(--liga-blue); color: var(--liga-blue); }
+    .mas-btn.active i { color: var(--liga-blue); }
+    .mas-btn.danger   { color: #dc3545; }
+    .mas-btn.danger i { color: #dc3545; }
 
-    /* ─── Global mobile helpers ─────────────────────────────── */
-
-    /* Inputs y selects táctiles */
-    @media (max-width: 767px) {
-        input[type="text"],
-        input[type="email"],
-        input[type="password"],
-        input[type="number"],
-        input[type="date"],
-        input[type="datetime-local"],
-        input[type="url"],
-        select,
-        textarea {
-            font-size: 16px !important; /* evita zoom automático en iOS */
-        }
-
-        /* Tablas: scroll horizontal con indicador */
-        .table-responsive {
-            -webkit-overflow-scrolling: touch;
-            border-radius: 10px;
-        }
-
-        /* Botones de acción: más grandes en mobile */
-        .action-btn { min-width: 36px; min-height: 36px; }
-
-        /* Cards con menos padding */
-        .card-body { padding: .85rem; }
-
-        /* Botón flotante guardar: por encima del bottom nav */
-        .guardar-fab {
-            bottom: calc(var(--bottom-nav-h) + var(--safe-bottom) + .8rem) !important;
-        }
-
-        /* Ocultar columnas secundarias en tablas */
-        .col-hide-mobile { display: none !important; }
-
-        /* Ajuste contenedor */
-        .container-fluid, .container { padding-left: .75rem; padding-right: .75rem; }
-    }
-
-    /* ─── Desktop overrides ─────────────────────────────────── */
+    /* ── Desktop overrides ─────────────────────────────────── */
     @media (min-width: 768px) {
         .admin-bottomnav { display: none; }
-        .mas-overlay, .mas-panel { display: none !important; }
-        .admin-content { padding-bottom: 2rem; }
+        .admin-content   { padding-bottom: 2rem; }
 
         .admin-sidenav {
             display: block;
@@ -251,27 +178,21 @@ function nav_active(string $dir, string $file = ''): string {
             box-shadow: 0 1px 4px rgba(0,0,0,.06);
         }
         .admin-sidenav .nav-link {
-            color: #555;
-            font-size: .88rem;
-            font-weight: 500;
+            color: #555; font-size: .88rem; font-weight: 500;
             padding: .65rem .85rem;
             border-bottom: 3px solid transparent;
             border-radius: 0;
-            display: flex;
-            align-items: center;
-            gap: .4rem;
+            display: flex; align-items: center; gap: .4rem;
         }
-        .admin-sidenav .nav-link:hover { color: var(--liga-blue); }
+        .admin-sidenav .nav-link:hover  { color: var(--liga-blue); }
         .admin-sidenav .nav-link.active {
             color: var(--liga-blue);
             border-bottom-color: var(--liga-blue);
             font-weight: 600;
         }
         .admin-sidenav .nav-link.destacado {
-            color: #fff;
-            background: var(--liga-blue);
-            border-radius: 8px;
-            margin: .25rem .2rem;
+            color: #fff; background: var(--liga-blue);
+            border-radius: 8px; margin: .25rem .2rem;
         }
         .col-hide-mobile { display: table-cell !important; }
     }
@@ -279,7 +200,7 @@ function nav_active(string $dir, string $file = ''): string {
 </head>
 <body>
 
-<!-- Top bar -->
+<!-- ── Top bar ──────────────────────────────────────────────── -->
 <header class="admin-topbar">
     <a href="<?= $app_root ?>admin/index.php" class="brand">
         <i class="bi bi-trophy-fill"></i>
@@ -287,159 +208,114 @@ function nav_active(string $dir, string $file = ''): string {
         <span class="d-sm-none">LDGA</span>
     </a>
     <span class="spacer"></span>
-    <span class="user-badge d-none d-md-flex">
+    <span class="user-pill d-none d-md-flex me-2">
         <i class="bi bi-person-circle"></i> <?= $admin_nombre ?>
         <?php if ($es_superadmin): ?>
-            <span style="background:rgba(240,165,0,.25);color:#f0a500;font-size:.65rem;padding:.1rem .4rem;border-radius:10px;font-weight:700;letter-spacing:.5px;">ADMIN</span>
-        <?php else: ?>
-            <span style="background:rgba(255,255,255,.15);color:rgba(255,255,255,.7);font-size:.65rem;padding:.1rem .4rem;border-radius:10px;">editor</span>
+        <span style="background:rgba(240,165,0,.25);color:var(--liga-accent);font-size:.62rem;padding:.1rem .4rem;border-radius:10px;font-weight:700;">ADMIN</span>
         <?php endif; ?>
     </span>
-    <a href="<?= $base_path ?>logout.php" class="btn-logout ms-3" title="Cerrar sesión">
+    <a href="<?= $base_path ?>logout.php" class="btn-logout" title="Salir">
         <i class="bi bi-box-arrow-right"></i>
         <span class="d-none d-sm-inline ms-1" style="font-size:.8rem;">Salir</span>
     </a>
 </header>
 
-<!-- Desktop nav -->
+<!-- ── Desktop nav ─────────────────────────────────────────── -->
 <nav class="admin-sidenav">
     <ul class="nav">
-        <li class="nav-item">
-            <a class="nav-link <?= (nav_active('', 'index.php') && $current_dir === 'admin') ? 'active' : '' ?>"
-               href="<?= $app_root ?>admin/index.php">
-               <i class="bi bi-house-fill"></i> Inicio
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link destacado"
-               href="<?= $app_root ?>admin/partidos/cargar_resultados_fecha.php">
-               <i class="bi bi-clipboard-check-fill"></i> Cargar Resultados
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link <?= nav_active('partidos') ?>"
-               href="<?= $app_root ?>admin/partidos/">
-               <i class="bi bi-calendar2-week-fill"></i> Partidos
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link <?= nav_active('torneos') ?>"
-               href="<?= $app_root ?>admin/torneos/">
-               <i class="bi bi-trophy-fill"></i> Torneos
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link <?= nav_active('divisiones') ?>"
-               href="<?= $app_root ?>admin/divisiones/">
-               <i class="bi bi-list-ol"></i> Divisiones
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link <?= nav_active('clubes') ?>"
-               href="<?= $app_root ?>admin/clubes/">
-               <i class="bi bi-shield-fill"></i> Clubes
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link <?= (nav_active('', 'compartir.php') && $current_dir === 'admin') ? 'active' : '' ?>"
-               href="<?= $app_root ?>admin/compartir.php">
-               <i class="bi bi-share-fill"></i> Compartir
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link <?= (nav_active('', 'widgets.php') && $current_dir === 'admin') ? 'active' : '' ?>"
-               href="<?= $app_root ?>admin/widgets.php">
-               <i class="bi bi-window-stack"></i> Widgets
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link <?= ($current_file === 'usuarios.php' && $current_dir === 'admin') ? 'active' : '' ?>"
-               href="<?= $app_root ?>admin/usuarios.php">
-               <i class="bi bi-people-fill"></i> Usuarios
-            </a>
-        </li>
+        <?php
+        $dnav = [
+            ['', 'index.php', 'admin', 'bi-house-fill',         'Inicio'],
+            ['', 'cargar_resultados_fecha.php', '', 'bi-clipboard-check-fill', 'Cargar Resultados', 'destacado'],
+            ['partidos',  '', '', 'bi-calendar2-week-fill', 'Partidos'],
+            ['torneos',   '', '', 'bi-trophy-fill',         'Torneos'],
+            ['divisiones','', '', 'bi-list-ol',             'Divisiones'],
+            ['clubes',    '', '', 'bi-shield-fill',         'Clubes'],
+            ['', 'compartir.php', 'admin', 'bi-share-fill',  'Compartir'],
+            ['', 'widgets.php',   'admin', 'bi-window-stack', 'Widgets'],
+            ['', 'usuarios.php',  'admin', 'bi-people-fill',  'Usuarios'],
+        ];
+        foreach ($dnav as [$dir, $file, $chk_dir, $ico, $lbl, $extra = '']) {
+            $active = '';
+            if ($dir && strpos(dirname($_SERVER['PHP_SELF']), $dir) !== false) $active = 'active';
+            elseif ($file && $current_file === $file && (!$chk_dir || $current_dir === $chk_dir)) $active = 'active';
+            $href = $file
+                ? $app_root . 'admin/' . ($dir ? "$dir/" : '') . $file
+                : $app_root . 'admin/' . $dir . '/';
+            echo "<li class='nav-item'><a class='nav-link $active $extra' href='$href'><i class='bi $ico'></i> $lbl</a></li>";
+        }
+        ?>
     </ul>
 </nav>
 
-<!-- Mobile bottom nav (5 items + Más) -->
-<nav class="admin-bottomnav" id="bottom-nav">
-    <a href="<?= $app_root ?>admin/index.php"
-       class="<?= ($current_file === 'index.php' && $current_dir === 'admin') ? 'active' : '' ?>">
-        <i class="bi bi-house-fill"></i> Inicio
+<!-- ── Mobile bottom nav ───────────────────────────────────── -->
+<nav class="admin-bottomnav">
+    <a class="bn-item <?= ($current_file === 'index.php' && $current_dir === 'admin') ? 'active' : '' ?>"
+       href="<?= $app_root ?>admin/index.php">
+        <i class="bi bi-house-fill"></i>Inicio
     </a>
-    <a href="<?= $app_root ?>admin/partidos/cargar_resultados_fecha.php"
-       class="btn-cargar <?= $current_file === 'cargar_resultados_fecha.php' ? 'active' : '' ?>">
-        <i class="bi bi-clipboard-check-fill"></i> Resultados
+    <a class="bn-item bn-primary <?= $current_file === 'cargar_resultados_fecha.php' ? 'active' : '' ?>"
+       href="<?= $app_root ?>admin/partidos/cargar_resultados_fecha.php">
+        <i class="bi bi-clipboard-check-fill"></i>Resultados
     </a>
-    <a href="<?= $app_root ?>admin/partidos/"
-       class="<?= (nav_active('partidos') && $current_file !== 'cargar_resultados_fecha.php') ? 'active' : '' ?>">
-        <i class="bi bi-calendar2-week-fill"></i> Partidos
+    <a class="bn-item <?= (nav_active('partidos') && $current_file !== 'cargar_resultados_fecha.php') ? 'active' : '' ?>"
+       href="<?= $app_root ?>admin/partidos/">
+        <i class="bi bi-calendar2-week-fill"></i>Partidos
     </a>
-    <a href="<?= $app_root ?>admin/torneos/"
-       class="<?= nav_active('torneos') ? 'active' : '' ?>">
-        <i class="bi bi-trophy-fill"></i> Torneos
+    <a class="bn-item <?= nav_active('torneos') ? 'active' : '' ?>"
+       href="<?= $app_root ?>admin/torneos/">
+        <i class="bi bi-trophy-fill"></i>Torneos
     </a>
-    <button class="btn-mas" id="btn-mas" onclick="toggleMas()" aria-label="Más opciones">
-        <i class="bi bi-grid-3x3-gap-fill"></i> Más
+    <!-- Más → abre offcanvas -->
+    <button class="bn-item" type="button"
+            data-bs-toggle="offcanvas" data-bs-target="#offcanvasMas"
+            aria-controls="offcanvasMas">
+        <i class="bi bi-grid-2x2-fill"></i>Más
     </button>
 </nav>
 
-<!-- Overlay + slide-up panel -->
-<div class="mas-overlay" id="mas-overlay" onclick="closeMas()"></div>
-<div class="mas-panel" id="mas-panel">
-    <div class="mas-title">Más secciones</div>
-    <div class="mas-grid">
-        <a href="<?= $app_root ?>admin/clubes/" class="mas-item <?= nav_active('clubes') ? 'active' : '' ?>">
-            <i class="bi bi-shield-fill"></i> Clubes
-        </a>
-        <a href="<?= $app_root ?>admin/divisiones/" class="mas-item <?= nav_active('divisiones') ? 'active' : '' ?>">
-            <i class="bi bi-list-ol"></i> Divisiones
-        </a>
-        <a href="<?= $app_root ?>admin/partidos/reprogramar_fecha.php" class="mas-item <?= $current_file === 'reprogramar_fecha.php' ? 'active' : '' ?>">
-            <i class="bi bi-calendar-x-fill"></i> Reprogramar
-        </a>
-        <a href="<?= $app_root ?>admin/compartir.php" class="mas-item <?= ($current_file === 'compartir.php' && $current_dir === 'admin') ? 'active' : '' ?>">
-            <i class="bi bi-share-fill"></i> Compartir
-        </a>
-        <a href="<?= $app_root ?>admin/widgets.php" class="mas-item <?= ($current_file === 'widgets.php' && $current_dir === 'admin') ? 'active' : '' ?>">
-            <i class="bi bi-window-stack"></i> Widgets
-        </a>
-        <a href="<?= $app_root ?>admin/usuarios.php" class="mas-item <?= ($current_file === 'usuarios.php' && $current_dir === 'admin') ? 'active' : '' ?>">
-            <i class="bi bi-people-fill"></i> Usuarios
-        </a>
-        <a href="<?= $app_root ?>admin/partidos/cargar_fecha.php" class="mas-item <?= $current_file === 'cargar_fecha.php' ? 'active' : '' ?>">
-            <i class="bi bi-calendar-plus-fill"></i> Cargar Fecha
-        </a>
-        <a href="<?= $app_root ?>admin/logout.php" class="mas-item" style="color:#dc3545;">
-            <i class="bi bi-box-arrow-right" style="color:#dc3545;"></i> Salir
-        </a>
+<!-- ── Offcanvas "Más" ─────────────────────────────────────── -->
+<div class="offcanvas offcanvas-bottom rounded-top-4" tabindex="-1"
+     id="offcanvasMas" aria-labelledby="offcanvasMasLabel"
+     style="max-height:55vh;">
+    <div class="offcanvas-header pb-1 pt-3">
+        <h6 class="offcanvas-title fw-bold small text-muted text-uppercase letter-spacing-1" id="offcanvasMasLabel">
+            <i class="bi bi-grid-fill me-1" style="color:var(--liga-blue);"></i> Más secciones
+        </h6>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Cerrar"></button>
     </div>
-    <div class="mt-2 pt-2 border-top">
-        <div class="text-muted" style="font-size:.65rem; text-align:center;">
+    <div class="offcanvas-body pt-0">
+        <div class="mas-grid">
+            <a href="<?= $app_root ?>admin/clubes/" class="mas-btn <?= nav_active('clubes') ? 'active' : '' ?>" data-bs-dismiss="offcanvas">
+                <i class="bi bi-shield-fill"></i>Clubes
+            </a>
+            <a href="<?= $app_root ?>admin/divisiones/" class="mas-btn <?= nav_active('divisiones') ? 'active' : '' ?>" data-bs-dismiss="offcanvas">
+                <i class="bi bi-list-ol"></i>Divisiones
+            </a>
+            <a href="<?= $app_root ?>admin/partidos/reprogramar_fecha.php" class="mas-btn <?= $current_file === 'reprogramar_fecha.php' ? 'active' : '' ?>" data-bs-dismiss="offcanvas">
+                <i class="bi bi-calendar-x-fill"></i>Reprogramar
+            </a>
+            <a href="<?= $app_root ?>admin/partidos/cargar_fecha.php" class="mas-btn <?= $current_file === 'cargar_fecha.php' ? 'active' : '' ?>" data-bs-dismiss="offcanvas">
+                <i class="bi bi-calendar-plus-fill"></i>Cargar Fecha
+            </a>
+            <a href="<?= $app_root ?>admin/compartir.php" class="mas-btn <?= ($current_file === 'compartir.php' && $current_dir === 'admin') ? 'active' : '' ?>" data-bs-dismiss="offcanvas">
+                <i class="bi bi-share-fill"></i>Compartir
+            </a>
+            <a href="<?= $app_root ?>admin/widgets.php" class="mas-btn <?= ($current_file === 'widgets.php' && $current_dir === 'admin') ? 'active' : '' ?>" data-bs-dismiss="offcanvas">
+                <i class="bi bi-window-stack"></i>Widgets
+            </a>
+            <a href="<?= $app_root ?>admin/usuarios.php" class="mas-btn <?= ($current_file === 'usuarios.php' && $current_dir === 'admin') ? 'active' : '' ?>" data-bs-dismiss="offcanvas">
+                <i class="bi bi-people-fill"></i>Usuarios
+            </a>
+            <a href="<?= $base_path ?>logout.php" class="mas-btn danger" data-bs-dismiss="offcanvas">
+                <i class="bi bi-box-arrow-right"></i>Salir
+            </a>
+        </div>
+        <div class="text-center text-muted pb-1" style="font-size:.65rem;">
             <i class="bi bi-person-circle me-1"></i><?= $admin_nombre ?>
-            <?php if ($es_superadmin): ?>
-                <span style="color:var(--liga-accent);font-weight:700;"> · ADMIN</span>
-            <?php endif; ?>
+            <?php if ($es_superadmin): ?>· <span style="color:var(--liga-accent);font-weight:700;">ADMIN</span><?php endif; ?>
         </div>
     </div>
 </div>
-
-<script>
-function toggleMas() {
-    const panel   = document.getElementById('mas-panel');
-    const overlay = document.getElementById('mas-overlay');
-    const btn     = document.getElementById('btn-mas');
-    const open    = panel.classList.toggle('visible');
-    overlay.classList.toggle('visible', open);
-    btn.classList.toggle('open', open);
-}
-function closeMas() {
-    document.getElementById('mas-panel').classList.remove('visible');
-    document.getElementById('mas-overlay').classList.remove('visible');
-    document.getElementById('btn-mas').classList.remove('open');
-}
-// Cerrar con Escape
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMas(); });
-</script>
 
 <div class="admin-content">
