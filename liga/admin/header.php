@@ -204,7 +204,7 @@ function nav_active(string $dir, string $file = ''): string {
 <header class="admin-topbar">
     <a href="<?= $app_root ?>admin/index.php" class="brand">
         <i class="bi bi-trophy-fill"></i>
-        <span class="d-none d-sm-inline">Liga Arenales</span>
+        <span class="d-none d-sm-inline">Liga Deportiva de General Arenales</span>
         <span class="d-sm-none">LDGA</span>
     </a>
     <span class="spacer"></span>
